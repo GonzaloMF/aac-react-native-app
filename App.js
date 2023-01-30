@@ -1,11 +1,14 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import Main from './src/components/Main';
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import Dashboard from './src/components/Dashboard';
+import * as ScreenOrientation from 'expo-screen-orientation'
+import {useState} from 'react'
+
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Main />
+      <Dashboard />
     </View>
   );
 }
@@ -13,8 +16,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

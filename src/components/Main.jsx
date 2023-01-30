@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+
+
 //import ImagesRepo from './src/components/ImagesRepo';
 
 const images = [
-  { source: require('./assets/images/chicken.png'), name: "Image 1" },
-  { source: require('./assets/images/fish.png'), name: "Image 2" },
-  { source:require('./assets/images/meat.png'), name: "Image 3" },
-  // Add more images
+
+
 ];
 
 
