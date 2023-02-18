@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Image, TouchableOpacity, Text } from 'react-native';
 import chicken from 'aac-react-native-app/assets/images/chicken.png';
-import fish from 'C:/xampp/htdocs/aac-react-native-app/assets/images/fish.png';
-import honey from 'C:/xampp/htdocs/aac-react-native-app/assets/images/honey.png';
+import fish from 'aac-react-native-app/assets/images/fish.png';
+import honey from 'aac-react-native-app/assets/images/honey.png';
 
 const Dashboard = () => {
   const [selectedImage, setSelectedImage] = useState(null);
