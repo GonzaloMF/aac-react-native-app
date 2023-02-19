@@ -1,73 +1,84 @@
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
-import Keyboard from './src/components/Keyboard';
-import MessageInput from './src/components/MessageInput';
-import MessageList from './src/components/MessageList';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import AlphabetKeyboard from './src/components/AlphabetKeyboard';
+import IconKeyboard from './src/components/IconKeyboard';
+import SelectedItems from './src/components/SelectedItems';
+import { Ionicons } from '@expo/vector-icons';
 
-const App = () => {
-  const [selectedText, setSelectedText] = useState('');
-  const [messages, setMessages] = useState([]);
+export default function App() {
+  const [showAlphabetKeyboard, setShowAlphabetKeyboard] = useState(true);
+  const [showIconKeyboard, setShowIconKeyboard] = useState(false);
+  const [selectedItems, setSelectedItems] = useState([]);
 
-  const handleKeyPress = (key) => {
-    setSelectedText(selectedText + key);
+  const handleAddItem = (item) => {
+    setSelectedItems([...selectedItems, item]);
   };
 
-  const handleSend = () => {
-    setMessages([...messages, selectedText]);
-    setSelectedText('');
-  };
-
-  const handleDelete = () => {
-    setMessages(messages.slice(0, -1));
-  };
-
-  const handleMessagePress = (message) => {
-    setSelectedText(message);
+  const handleKeyboardChange = () => {
+    setShowAlphabetKeyboard(!showAlphabetKeyboard);
+    setShowIconKeyboard(!showIconKeyboard);
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+      <View style={styles.selectedItemsContainer}>
+        <SelectedItems
+          items={selectedItems}
+          handleDelete={() =>
+            setSelectedItems(selectedItems.slice(0, selectedItems.length - 1))
+          }
+          onDelete={handleDelete}
+        />
+      </View>
       <View style={styles.keyboardContainer}>
-        <Keyboard keys={['A', 'B', 'C', 'D', 'E']} onKeyPress={handleKeyPress} selectedText={selectedText} />
-      </View>
-      <View style={styles.chatContainer}>
-        <MessageInput selectedText={selectedText} onSend={handleSend} />
-        <MessageList messages={messages} onMessagePress={handleMessagePress} />
-      </View>
-      {messages.length > 0 && (
-        <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-          <Text style={styles.deleteText}>Delete</Text>
+        {showAlphabetKeyboard && (
+          <AlphabetKeyboard handlePress={handleAddItem} />
+        )}
+        {showIconKeyboard && <IconKeyboard handlePress={handleAddItem} />}
+        <TouchableOpacity onPress={handleKeyboardChange} style={styles.button}>
+          <Text style={styles.buttonText}>
+            {showAlphabetKeyboard
+              ? 'Cambiar a teclado de iconos'
+              : 'Cambiar a teclado de letras'}
+          </Text>
         </TouchableOpacity>
-      )}
-    </SafeAreaView>
+      </View>
+    </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  selectedItemsContainer: {
+    width: '100%',
+    padding: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
   },
   keyboardContainer: {
     flex: 1,
+    width: '100%',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
-  chatContainer: {
-    flex: 1,
-    flexDirection: 'column',
+  button: {
+    marginTop: 20,
+    backgroundColor: '#000',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 5,
   },
-  deleteButton: {
-    position: 'absolute',
-    top: 20,
-    right: 20,
-    backgroundColor: '#f00',
-    borderRadius: 10,
-    padding: 10,
-  },
-  deleteText: {
+  buttonText: {
     color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 18,
   },
 });
 
-export default App;
