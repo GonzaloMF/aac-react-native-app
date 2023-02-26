@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 const IconKeyboard = ({ handlePress }) => {
   const icons = [
     'smile-o',
+    'frown-o',
     'thumbs-o-up',
     'star-o',
     'heart-o',
@@ -18,7 +19,7 @@ const IconKeyboard = ({ handlePress }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Teclado de iconos</Text>
+      <Text style={styles.title}>ICON KEYBOARD</Text>
       <View style={styles.keyboard}>
         {icons.map((icon, index) => (
           <TouchableOpacity

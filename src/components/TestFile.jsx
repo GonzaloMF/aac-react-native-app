@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import 'react-native-gesture-handler';
 import AlphabetKeyboard from './src/components/AlphabetKeyboard';
 import IconKeyboard from './src/components/IconKeyboard';
 import SelectedItems from './src/components/SelectedItems';
-import AddCategoryScreen from './src/components/AddCategoryScreen';
 import { Ionicons } from '@expo/vector-icons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
-
 
 const Drawer = createDrawerNavigator();
 
@@ -41,7 +38,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="Home">
-        <Drawer.Screen name="Home" options={{ title: 'AACBoard' }}>
+        <Drawer.Screen name="Home" options={{ title: 'Home' }}>
           {() => (
             <View style={styles.container}>
               <View style={styles.selectedItemsContainer}>
@@ -63,17 +60,17 @@ export default function App() {
                 <TouchableOpacity onPress={handleKeyboardChange} style={styles.button}>
                   <Text style={styles.buttonText}>
                     {showAlphabetKeyboard
-                      ? 'Change to icon keyboard'
-                      : 'Change to alphabetic keyboard'}
+                      ? 'Cambiar a teclado de iconos'
+                      : 'Cambiar a teclado de letras'}
                   </Text>
                 </TouchableOpacity>
               </View>
             </View>
           )}
         </Drawer.Screen>
-        <Drawer.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
-        <Drawer.Screen name="Settings" component={SettingsScreen} options={{ title: 'Settings' }} />
-        <Drawer.Screen name="AddCategory" component={AddCategoryScreen} options={{ title: 'Add category' }} />
+        <Drawer.Screen name="Profile" component={ProfileScreen} options={{ title: 'Perfil' }} />
+        <Drawer.Screen name="Settings" component={SettingsScreen} options={{ title: 'Ajustes' }} />
+        <Drawer.Screen name="AddCategory" component={AddCategoryScreen} options={{ title: 'Agregar categoría' }} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
@@ -82,9 +79,9 @@ export default function App() {
 function ProfileScreen({ navigation }) {
   return (
     <View style={styles.screen}>
-      <Text style={styles.screenText}>Profile tab</Text>
+      <Text style={styles.screenText}>Página de perfil</Text>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
-        <Text style={styles.buttonText}>Back</Text>
+        <Text style={styles.buttonText}>Volver</Text>
       </TouchableOpacity>
     </View>
   );
@@ -93,25 +90,13 @@ function ProfileScreen({ navigation }) {
 function SettingsScreen({ navigation }) {
   return (
     <View style={styles.screen}>
-      <Text style={styles.screenText}>Settings tab</Text>
+      <Text style={styles.screenText}>Página de ajustes</Text>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
-      <Text style={styles.buttonText}>Back</Text>
+      <Text style={styles.buttonText}>Volver</Text>
       </TouchableOpacity>
     </View>
   );
 }
-
-/*function AddCategoryScreen({ navigation }) {
-  
-  return (
-    <View style={styles.screen}>
-      <Text style={styles.screenText}>Category tab</Text>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
-      <Text style={styles.buttonText}>Back</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}*/
 
 const styles = StyleSheet.create({
   container: {

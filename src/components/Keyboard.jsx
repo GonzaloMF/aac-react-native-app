@@ -1,9 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const Keyboard = ({ keys, onKeyPress, selectedText }) => {
+const Keyboard = ({ keys, onKeyPress, selectedText, onDelete }) => {
   const handleKeyPress = (key) => {
-    onKeyPress(key);
+    if (key === '←') {
+      onDelete();
+    } else {
+      onKeyPress(key);
+    }
   };
 
   return (
@@ -18,6 +22,12 @@ const Keyboard = ({ keys, onKeyPress, selectedText }) => {
             <Text style={styles.keyText}>{key}</Text>
           </TouchableOpacity>
         ))}
+        <TouchableOpacity
+          style={styles.keyButton}
+          onPress={() => handleKeyPress('←')}
+        >
+          <Text style={styles.keyText}>←</Text>
+        </TouchableOpacity>
       </View>
       {selectedText ? (
         <Text style={styles.selectedText}>{selectedText}</Text>

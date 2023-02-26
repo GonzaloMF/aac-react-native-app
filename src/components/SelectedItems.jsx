@@ -1,69 +1,69 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function SelectedItems({ items, onDelete }) {
-  const handleDelete = (index) => {
-    onDelete(index);
-  };
-
+const SelectedItems = ({ items, handleDelete }) => {
+  const lastItem = items.length > 0 ? items[items.length - 1] : null;
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Seleccionados:</Text>
-        <TouchableOpacity
-          style={styles.deleteButton}
-          onPress={() => handleDelete(items.length - 1)}
-        >
-          <Ionicons name="ios-close-circle-outline" size={24} color="red" />
-        </TouchableOpacity>
-      </View>
       <View style={styles.itemsContainer}>
         {items.map((item, index) => (
           <TouchableOpacity
             key={index}
-            style={styles.itemButton}
+            style={styles.itemContainer}
             onPress={() => handleDelete(index)}
           >
             <Text style={styles.itemText}>{item}</Text>
+           
           </TouchableOpacity>
         ))}
       </View>
+      {/* {lastItem ? (
+        <View style={styles.lastItemContainer}>
+          <Text style={styles.lastItemText}>Último elemento: {lastItem}</Text>
+          <Ionicons
+            name="ios-close-circle"
+            size={20}
+            color="#FF0000"
+            onPress={() => handleDelete(items.length - 1)}
+          />
+        </View>
+      ) : null} */}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 5,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  deleteButton: {
-    padding: 5,
+    padding: 10,
   },
   itemsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
-    justifyContent: 'center',
   },
-  itemButton: {
+  itemContainer: {
     backgroundColor: '#ccc',
-    borderRadius: 5,
+    borderRadius: 20,
     padding: 10,
     margin: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   itemText: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 18,
+    marginRight: 10,
+  },
+  lastItemContainer: {
+    marginTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  lastItemText: {
+    fontSize: 16,
+    marginRight: 10,
   },
 });
+
+export default SelectedItems;

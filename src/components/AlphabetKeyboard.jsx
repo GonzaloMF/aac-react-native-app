@@ -6,7 +6,7 @@ const AlphabetKeyboard = ({ handlePress }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Teclado alfabético</Text>
+      <Text style={styles.title}>ALPHABETIC KEYBOARD</Text>
       <View style={styles.keyboard}>
         {alphabet.map((letter, index) => (
           <TouchableOpacity
