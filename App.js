@@ -1,152 +1,48 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import 'react-native-gesture-handler';
-import AlphabetKeyboard from './src/components/AlphabetKeyboard';
-import IconKeyboard from './src/components/IconKeyboard';
-import SelectedItems from './src/components/SelectedItems';
-import AddCategoryScreen from './src/components/AddCategoryScreen';
-import { Ionicons } from '@expo/vector-icons';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { StatusBar } from 'expo-status-bar';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import LoginScreen from './screens/LoginScreen';
+import HomeScreen from './screens/HomeScreen';
+import { auth } from './src/utils/Firebase';
 import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
 
-const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
 
 export default function App() {
-  const [showAlphabetKeyboard, setShowAlphabetKeyboard] = useState(true);
-  const [showIconKeyboard, setShowIconKeyboard] = useState(false);
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [user, setUser] = useState(null);
 
-  const handleAddItem = (item) => {
-    setSelectedItems([...selectedItems, item]);
-  };
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((authUser) => {
+      if (authUser) {
+        setUser(authUser);
+      } else {
+        setUser(null);
+      }
+    });
 
-  const handleDeleteItem = (index) => {
-    const newItems = [...selectedItems];
-    newItems.splice(index, 1);
-    setSelectedItems(newItems);
-  };
-
-  const handleKeyboardChange = () => {
-    setShowAlphabetKeyboard(!showAlphabetKeyboard);
-    setShowIconKeyboard(!showIconKeyboard);
-  };
-
-  const handleDeleteLastItem = () => {
-    const newItems = [...selectedItems];
-    newItems.pop();
-    setSelectedItems(newItems);
-  };
+    return unsubscribe;
+  }, []);
 
   return (
-    <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Home">
-        <Drawer.Screen name="Home" options={{ title: 'AACBoard' }}>
-          {() => (
-            <View style={styles.container}>
-              <View style={styles.selectedItemsContainer}>
-                <SelectedItems
-                  items={selectedItems}
-                  handleDelete={(index) => handleDeleteItem(index)}
-                />
-                {selectedItems.length > 0 && (
-                  <TouchableOpacity onPress={handleDeleteLastItem} style={styles.deleteButton}>
-                    <Ionicons name="ios-close-circle-outline" size={24} color="#ff0000" />
-                  </TouchableOpacity>
-                )}
-              </View>
-              <View style={styles.keyboardContainer}>
-                {showAlphabetKeyboard && (
-                  <AlphabetKeyboard handlePress={handleAddItem} />
-                )}
-                {showIconKeyboard && <IconKeyboard handlePress={handleAddItem} />}
-                <TouchableOpacity onPress={handleKeyboardChange} style={styles.button}>
-                  <Text style={styles.buttonText}>
-                    {showAlphabetKeyboard
-                      ? 'Change to icon keyboard'
-                      : 'Change to alphabetic keyboard'}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
+    <NavigationContainer independent={true}>
+      <View style={styles.container}>
+        <Stack.Navigator>
+          {user ? (
+            <Stack.Screen options={{headerShown: false}} name="Home" component={HomeScreen} />
+          ) : (
+            <Stack.Screen options={{headerShown: false}} name="Login" component={LoginScreen} />
           )}
-        </Drawer.Screen>
-        <Drawer.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
-        <Drawer.Screen name="Settings" component={SettingsScreen} options={{ title: 'Settings' }} />
-        <Drawer.Screen name="AddCategory" component={AddCategoryScreen} options={{ title: 'Add category' }} />
-      </Drawer.Navigator>
+        </Stack.Navigator>
+      </View>
     </NavigationContainer>
   );
 }
-
-function ProfileScreen({ navigation }) {
-  return (
-    <View style={styles.screen}>
-      <Text style={styles.screenText}>Profile tab</Text>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
-        <Text style={styles.buttonText}>Back</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
-
-function SettingsScreen({ navigation }) {
-  return (
-    <View style={styles.screen}>
-      <Text style={styles.screenText}>Settings tab</Text>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
-      <Text style={styles.buttonText}>Back</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
-
-/*function AddCategoryScreen({ navigation }) {
-  
-  return (
-    <View style={styles.screen}>
-      <Text style={styles.screenText}>Category tab</Text>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
-      <Text style={styles.buttonText}>Back</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}*/
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  selectedItemsContainer: {
-    width: '100%',
-    padding: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
-  keyboardContainer: {
-    flex: 1,
-    width: '100%',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  button: {
-    marginTop: 20,
-    backgroundColor: '#000',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-  },
-  deleteButton: {
-    marginLeft: 10,
   },
 });

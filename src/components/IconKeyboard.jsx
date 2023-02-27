@@ -1,20 +1,32 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const IconKeyboard = ({ handlePress }) => {
   const icons = [
-    'smile-o',
-    'frown-o',
-    'thumbs-o-up',
-    'star-o',
-    'heart-o',
+    'smile',
+    'smile-beam',
+    'smile-wink',
+    'sad-cry',
+    'sad-tear',
+    'angry',
+    'thumbs-down',
+    'thumbs-up',
     'check',
-    'exclamation',
-    'question',
-    'pencil',
+    'hospital',
+    'bed',
+    'bicycle',
+    'blind',
+    'pencil-alt',
     'phone',
-    'envelope',
+    'football-ball',
+    'basketball-ball',
+    'table-tennis',
+    'cat',
+    'dog',
+    'horse',
+    'kiwi-bird',
+  
   ];
 
   return (

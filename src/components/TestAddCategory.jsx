@@ -3,92 +3,133 @@ import {
   View,
   Text,
   TextInput,
-  Button,
-  Image,
+  StyleSheet,
   TouchableOpacity,
-  Platform,
 } from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import * as Unicons from "@iconscout/react-native-unicons";
 import { Picker } from "@react-native-picker/picker";
+import { Ionicons } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
+import IconPicker from "react-native-icon-picker";
 
-const AgregarCategoriaScreen = () => {
-  const [titulo, setTitulo] = useState("");
-  const [icono, setIcono] = useState("book-open");
-  const [teclado, setTeclado] = useState("teclado1");
-  const [imagen, setImagen] = useState(null);
+const AddCategoryScreen = () => {
+  const [title, setTitle] = useState("");
+  const [icon, setIcon] = useState("");
+  const [keyboard, setKeyboard] = useState("");
+  const [image, setImage] = useState(null);
 
-  const handleGuardar = () => {
-    console.log({
-      titulo: titulo,
-      icono: icono,
-      teclado: teclado,
-      imagen: imagen,
-    });
+  const handleSave = () => {
+    // Here I have to add the function to databse or maybe backend
+    console.log(
+      `Category added with the title: "${title}", icon: "${icon}" and keyboard: "${keyboard}".`
+    );
   };
 
-  const handleSeleccionarImagen = async () => {
-    const permiso = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (permiso.granted === false) {
-      alert("Se requiere permiso para acceder a la galería de imágenes.");
+  const handleSelectImage = async () => {
+
+    const permition = await ImagePicker.requestMediaLibraryPermissionsAsync(); 
+    if (permition.granted === false) {
+      alert('We need to acces to your album.');
       return;
     }
-    let resultado = await ImagePicker.launchImageLibraryAsync({
+
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
-    if (!resultado.cancelled) {
-      setImagen(resultado.uri);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
     }
   };
 
   return (
-    <View>
-      <Text>Titulo:</Text>
-      <TextInput value={titulo} onChangeText={setTitulo} />
-      <Text>Icono:</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Add Category</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Title"
+        value={title}
+        onChangeText={(text) => setTitle(text)}
+      />
+      <Text>Icon:</Text>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Picker
           style={{ flex: 1 }}
-          selectedValue={icono}
-          onValueChange={setIcono}
+          selectedValue={icon}
+          onValueChange={setIcon}
         >
-          <Picker.Item label="Libro" value="book-open" />
+          <Picker.Item name="ios-close-circle-outline" value="book-open" />
           <Picker.Item label="Comida" value="utensils" />
           <Picker.Item label="Ropa" value="tshirt" />
           {/* Agrega más opciones aquí */}
         </Picker>
-        <Unicons.UilApps size={30} color="#000" />
+        <Ionicons name="ios-close-circle-outline" size={30} color="#000" />
       </View>
-      <Text>Teclado:</Text>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <Picker
-          style={{ flex: 1 }}
-          selectedValue={teclado}
-          onValueChange={setTeclado}
-        >
-          <Picker.Item label="Teclado 1" value="teclado1" />
-          <Picker.Item label="Teclado 2" value="teclado2" />
-          <Picker.Item label="Teclado 3" value="teclado3" />
-          {/* Agrega más opciones aquí */}
-        </Picker>
-        <Unicons.UilKeyboard size={30} color="#000" />
-      </View>
-      <Text>Pictograma:</Text>
-      {imagen && (
-        <Image source={{ uri: imagen }} style={{ width: 200, height: 200 }} />
-      )}
-      <TouchableOpacity onPress={handleSeleccionarImagen}>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Unicons.UilImage size={30} color="#000" />
-          <Text style={{ marginLeft: 10 }}>Seleccionar imagen</Text>
-        </View>
+      <TouchableOpacity
+        style={styles.imageContainer}
+        onPress={handleSelectImage}
+      >
+        {image ? (
+          <Image source={{ uri: image }} style={styles.image} />
+        ) : (
+          <Ionicons name="image-outline" size={50} color="#c4c4c4" />
+        )}
       </TouchableOpacity>
-      <Button title="Guardar" onPress={handleGuardar} />
+      <TouchableOpacity style={styles.button} onPress={handleSave}>
+        <Text style={styles.buttonText}>Save</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
-export default AgregarCategoriaScreen;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    alignItems: "center",
+    justifyContent: "left",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 16,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#c4c4c4",
+    borderRadius: 8,
+    padding: 8,
+    marginBottom: 16,
+    width: "100%",
+  },
+  imageContainer: {
+    borderWidth: 1,
+    borderColor: "#c4c4c4",
+    borderRadius: 8,
+    width: "100%",
+    height: 200,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 16,
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+  },
+  button: {
+    backgroundColor: "#007aff",
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+});
+
+export default AddCategoryScreen;

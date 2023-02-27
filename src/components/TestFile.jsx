@@ -1,137 +1,77 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import AlphabetKeyboard from './src/components/AlphabetKeyboard';
-import IconKeyboard from './src/components/IconKeyboard';
-import SelectedItems from './src/components/SelectedItems';
-import { Ionicons } from '@expo/vector-icons';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const Drawer = createDrawerNavigator();
+const pictograms = [
+  {
+    name: "picto1",
+    icon: <MaterialCommunityIcons name="food" size={32} color="black" />,
+  },
+  {
+    name: "picto2",
+    icon: <MaterialCommunityIcons name="home" size={32} color="black" />,
+  },
+  {
+    name: "picto3",
+    icon: <MaterialCommunityIcons name="phone" size={32} color="black" />,
+  },
+  // Agrega todos los pictogramas que necesites en esta matriz
+];
 
-export default function App() {
-  const [showAlphabetKeyboard, setShowAlphabetKeyboard] = useState(true);
-  const [showIconKeyboard, setShowIconKeyboard] = useState(false);
-  const [selectedItems, setSelectedItems] = useState([]);
-
-  const handleAddItem = (item) => {
-    setSelectedItems([...selectedItems, item]);
-  };
-
-  const handleDeleteItem = (index) => {
-    const newItems = [...selectedItems];
-    newItems.splice(index, 1);
-    setSelectedItems(newItems);
-  };
-
-  const handleKeyboardChange = () => {
-    setShowAlphabetKeyboard(!showAlphabetKeyboard);
-    setShowIconKeyboard(!showIconKeyboard);
-  };
-
-  const handleDeleteLastItem = () => {
-    const newItems = [...selectedItems];
-    newItems.pop();
-    setSelectedItems(newItems);
-  };
-
+const PictogramKeyboard = ({ handlePress }) => {
   return (
-    <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Home">
-        <Drawer.Screen name="Home" options={{ title: 'Home' }}>
-          {() => (
-            <View style={styles.container}>
-              <View style={styles.selectedItemsContainer}>
-                <SelectedItems
-                  items={selectedItems}
-                  handleDelete={(index) => handleDeleteItem(index)}
-                />
-                {selectedItems.length > 0 && (
-                  <TouchableOpacity onPress={handleDeleteLastItem} style={styles.deleteButton}>
-                    <Ionicons name="ios-close-circle-outline" size={24} color="#ff0000" />
-                  </TouchableOpacity>
-                )}
-              </View>
-              <View style={styles.keyboardContainer}>
-                {showAlphabetKeyboard && (
-                  <AlphabetKeyboard handlePress={handleAddItem} />
-                )}
-                {showIconKeyboard && <IconKeyboard handlePress={handleAddItem} />}
-                <TouchableOpacity onPress={handleKeyboardChange} style={styles.button}>
-                  <Text style={styles.buttonText}>
-                    {showAlphabetKeyboard
-                      ? 'Cambiar a teclado de iconos'
-                      : 'Cambiar a teclado de letras'}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-        </Drawer.Screen>
-        <Drawer.Screen name="Profile" component={ProfileScreen} options={{ title: 'Perfil' }} />
-        <Drawer.Screen name="Settings" component={SettingsScreen} options={{ title: 'Ajustes' }} />
-        <Drawer.Screen name="AddCategory" component={AddCategoryScreen} options={{ title: 'Agregar categoría' }} />
-      </Drawer.Navigator>
-    </NavigationContainer>
-  );
-}
-
-function ProfileScreen({ navigation }) {
-  return (
-    <View style={styles.screen}>
-      <Text style={styles.screenText}>Página de perfil</Text>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
-        <Text style={styles.buttonText}>Volver</Text>
-      </TouchableOpacity>
+    /*
+    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+      {pictograms.map((pictogram) => (
+        <TouchableOpacity key={pictogram.name} onPress={() => handlePress(pictogram.name)}>
+          {pictogram.icon}
+        </TouchableOpacity>
+      ))}
+    </View>
+    */
+    <View style={styles.container}>
+      <Text style={styles.title}>PICTOGRAM KEYBOARD</Text>
+      <View style={styles.keyboard}>
+        {pictograms.map((pictogram) => (
+          <TouchableOpacity
+            key={pictogram.name}
+            onPress={() => handlePress(pictogram.name)}
+          >
+            {pictogram.icon}
+          </TouchableOpacity>
+        ))}
+      </View>
     </View>
   );
-}
+};
 
-function SettingsScreen({ navigation }) {
-  return (
-    <View style={styles.screen}>
-      <Text style={styles.screenText}>Página de ajustes</Text>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.button}>
-      <Text style={styles.buttonText}>Volver</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
   },
-  selectedItemsContainer: {
-    width: '100%',
-    padding: 10,
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  keyboard: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
-  keyboardContainer: {
-    flex: 1,
-    width: '100%',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    flexWrap: 'wrap',
   },
   button: {
-    marginTop: 20,
-    backgroundColor: '#000',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    backgroundColor: 'lightblue',
+    padding: 10,
+    margin: 5,
     borderRadius: 5,
   },
   buttonText: {
-    color: '#fff',
     fontSize: 18,
-  },
-  deleteButton: {
-    marginLeft: 10,
+    fontWeight: 'bold',
+    color: 'white',
   },
 });
+
+export default PictogramKeyboard;
