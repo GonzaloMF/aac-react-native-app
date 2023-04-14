@@ -8,7 +8,7 @@ import {
   PixelRatio,
   Platform,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { Ionicons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -44,32 +44,19 @@ export default function Home() {
     setSelectedItems(newItems);
   };
 
-  {
-    /* Here we change which keyboard we want to use */
-  }
-
-  const handleKeyboardChange = (keyboard) => {
-    // Reboot all keyboards states
-    setShowAlphabetKeyboard(false);
-    setShowIconKeyboard(false);
-    setShowPictogramKeyboard(false);
-
-    switch (keyboard) {
-      case "alphabet":
-        setShowAlphabetKeyboard(true);
-        break;
-      case "icon":
-        setShowIconKeyboard(true);
-        break;
-      case "pictogram":
-        setShowPictogramKeyboard(true);
-        break;
-      default:
-        break;
+  const handleKeyboardChange = () => {
+    if (showAlphabetKeyboard) {
+      setShowIconKeyboard(true);
+      setShowAlphabetKeyboard(false);
+    } else if (showIconKeyboard) {
+      setShowAlphabetKeyboard(false);
+      setShowIconKeyboard(false);
+    } else {
+      setShowIconKeyboard(false);
+      setShowAlphabetKeyboard(true);
     }
   };
-  const [showPictogramKeyboard, setShowPictogramKeyboard] = useState(false);
-
+  
   const handleDeleteLastItem = () => {
     const newItems = [...selectedItems];
     newItems.pop();
@@ -82,6 +69,7 @@ export default function Home() {
         <Drawer.Screen name="Home" options={{ title: "AACBoard" }}>
           {() => (
             <View style={styles.container}>
+
               <View style={styles.selectedItemsContainer}>
                 <SelectedItems
                   items={selectedItems}
@@ -100,38 +88,60 @@ export default function Home() {
                   </TouchableOpacity>
                 )}
               </View>
-              {/* Render the selected keyboard based on state */}
-              {showAlphabetKeyboard && (
-                <AlphabetKeyboard handlePress={handleAddItem} />
-              )}
-              {showIconKeyboard && (
-                <IconKeyboard handlePress={handleAddItem} />
-              )}
-              {showPictogramKeyboard && (
-                <PictogramKeyboard handlePress={handleAddItem} />
-              )}
-
-              {/* Crea la barra inferior fija */}
-              <View style={styles.bottomBar}>
+              <View style={styles.keyboardContainer}>
+                {showAlphabetKeyboard && (
+                  <AlphabetKeyboard handlePress={handleAddItem} />
+                )}
+                {showIconKeyboard && (
+                  <IconKeyboard handlePress={handleAddItem} />
+                )}
+                {!showIconKeyboard && !showAlphabetKeyboard && (
+                  <PictogramKeyboard
+                    //firebase={firebase}
+                    handlePress={handleAddItem}
+                  />
+                )}
                 <TouchableOpacity
-                  onPress={() => handleKeyboardChange("alphabet")}
-                  style={styles.bottomBarButton}
+                  onPress={handleKeyboardChange}
+                  style={styles.button}
                 >
-                  <Text>Alphabet</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => handleKeyboardChange("icon")}
-                  style={styles.bottomBarButton}
-                >
-                  <Text>Icon</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => handleKeyboardChange("pictogram")}
-                  style={styles.bottomBarButton}
-                >
-                  <Text>Pictogram</Text>
+                  <Text style={styles.buttonText}>
+                    {showAlphabetKeyboard
+                      ? "Change to icon keyboard"
+                      : showIconKeyboard
+                      ? "Change to pictogram keyboard"
+                      : "Change to alphabetic keyboard"}
+                  </Text>
                 </TouchableOpacity>
               </View>
+              {/* Render the selected keyboard based on state */}
+              {showAlphabetKeyboard && <AlphabetKeyboard />}
+              {showIconKeyboard && <IconKeyboard />}
+              {!showIconKeyboard && !showAlphabetKeyboard && (
+                <PictogramKeyboard />
+              )}
+
+      {/* Crea la barra inferior fija */}
+      <View style={styles.bottomBar}>
+        <TouchableOpacity
+          onPress={() => handleKeyboardChange("alphabet")}
+          style={styles.bottomBarButton}
+        >
+          <Text>Alphabet</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => handleKeyboardChange("icon")}
+          style={styles.bottomBarButton}
+        >
+          <Text>Icon</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => handleKeyboardChange("pictogram")}
+          style={styles.bottomBarButton}
+        >
+          <Text>Pictogram</Text>
+        </TouchableOpacity>
+      </View>
             </View>
           )}
         </Drawer.Screen>
