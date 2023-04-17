@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  ScrollView,
-} from "react-native";
+import {StyleSheet,Text,TouchableOpacity,View,useWindowDimensions,PixelRatio,Platform,ScrollView,} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { Ionicons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
+import {widthPercentageToDP,heightPercentageToDP,} from "react-native-responsive-screen";
 
 import AlphabetKeyboard from "../src/components/AlphabetKeyboard";
 import IconKeyboard from "../src/components/IconKeyboard";

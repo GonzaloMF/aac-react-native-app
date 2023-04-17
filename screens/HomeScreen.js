@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -13,15 +13,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
-import {
-  widthPercentageToDP,
-  heightPercentageToDP,
-} from "react-native-responsive-screen";
+import {widthPercentageToDP,heightPercentageToDP,} from "react-native-responsive-screen";
+import CustomKeyboardContext from "../src/CustomKeyboardContext";
 import AlphabetKeyboard from "../src/components/AlphabetKeyboard";
 import IconKeyboard from "../src/components/IconKeyboard";
 import SelectedItems from "../src/components/SelectedItems";
 import PictogramKeyboard from "../src/components/PictogramKeyboard";
-import AddCategoryScreen from "../src/components/AddCategoryScreen";
+import AddKeyboard from "../src/components/AddKeyboardScreen";
 import ProfileTab from "../src/components/ProfileTab";
 import "react-native-gesture-handler";
 
@@ -44,10 +42,24 @@ export default function Home() {
     setSelectedItems(newItems);
   };
 
+  // Función para crear una nueva categoría (keyboard)
+  const handleAddScreen = (keyboardTitle) => {
+    // Aquí puedes guardar la nueva categoría en tu base de datos o realizar otras acciones necesarias
+    // En este ejemplo, simplemente imprimimos el título de la categoría en la consola
+    console.log("New keyboard title:", keyboardTitle);
+
+    // Generamos el nuevo .jsx con el nombre de la categoría y lo navegamos a la pantalla Home
+    const newKeyboardFileName = keyboardTitle + ".jsx";
+    // Aquí puedes escribir lógica para crear el nuevo archivo .jsx con el nombre de la categoría
+    // y guardarlo en el sistema de archivos
+
+    // Navegamos a la pantalla Home para ver la nueva categoría en la lista de keyboards
+    navigation.navigate("Home");
+  };
+
   {
     /* Here we change which keyboard we want to use */
   }
-
   const handleKeyboardChange = (keyboard) => {
     // Reboot all keyboards states
     setShowAlphabetKeyboard(false);
@@ -68,6 +80,7 @@ export default function Home() {
         break;
     }
   };
+
   const [showPictogramKeyboard, setShowPictogramKeyboard] = useState(false);
 
   const handleDeleteLastItem = () => {
@@ -104,9 +117,7 @@ export default function Home() {
               {showAlphabetKeyboard && (
                 <AlphabetKeyboard handlePress={handleAddItem} />
               )}
-              {showIconKeyboard && (
-                <IconKeyboard handlePress={handleAddItem} />
-              )}
+              {showIconKeyboard && <IconKeyboard handlePress={handleAddItem} />}
               {showPictogramKeyboard && (
                 <PictogramKeyboard handlePress={handleAddItem} />
               )}
@@ -145,11 +156,17 @@ export default function Home() {
           component={SettingsScreen}
           options={{ title: "Settings" }}
         />
-        <Drawer.Screen
-          name="AddCategory"
-          component={AddCategoryScreen}
-          options={{ title: "Add category" }}
-        />
+        <Drawer.Screen name="AddKeyboard" options={{ title: "Add keyboard" }}>
+          {() => (
+            <AddKeyboard
+              handleSave={(keyboardTitle, selectedPictograms) => {
+                // Lógica para guardar el nuevo teclado con su título y pictogramas seleccionados
+                console.log("New keyboard:", keyboardTitle);
+                console.log("Selected pictograms:", selectedPictograms);
+              }}
+            />
+          )}
+        </Drawer.Screen>
       </Drawer.Navigator>
     </NavigationContainer>
   );
