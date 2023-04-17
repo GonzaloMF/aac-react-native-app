@@ -13,15 +13,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
-import {widthPercentageToDP,heightPercentageToDP,} from "react-native-responsive-screen";
-import CustomKeyboardContext from "../src/CustomKeyboardContext";
+import {
+  widthPercentageToDP,
+  heightPercentageToDP,
+} from "react-native-responsive-screen";
 import AlphabetKeyboard from "../src/components/AlphabetKeyboard";
 import IconKeyboard from "../src/components/IconKeyboard";
 import SelectedItems from "../src/components/SelectedItems";
 import PictogramKeyboard from "../src/components/PictogramKeyboard";
-import AddKeyboard from "../src/components/AddKeyboardScreen";
+import AddKeyboard from "../src/components/AddKeyboard";
+import CustomKeyboardContext from "../src/CustomKeyboardContext";
 import ProfileTab from "../src/components/ProfileTab";
 import "react-native-gesture-handler";
+import CustomPictogramKeyboard from "../src/components/CustomPictogramKeyboard";
 
 //import firebase from "./src/utils/Firebase";
 
@@ -31,6 +35,12 @@ export default function Home() {
   const [showAlphabetKeyboard, setShowAlphabetKeyboard] = useState(true);
   const [showIconKeyboard, setShowIconKeyboard] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedCustomKeyboard, setSelectedCustomKeyboard] = useState(null);
+  const [keyboardTitle, setKeyboardTitle] = useState("Alphabet"); // Agrega esta línea para declarar el estado 'keyboardTitle' y su función de actualización 'setKeyboardTitle'
+
+  const { customKeyboards, setCustomKeyboards } = useContext(
+    CustomKeyboardContext
+  );
 
   const handleAddItem = (item) => {
     setSelectedItems([...selectedItems, item]);
@@ -42,25 +52,15 @@ export default function Home() {
     setSelectedItems(newItems);
   };
 
-  // Función para crear una nueva categoría (keyboard)
-  const handleAddScreen = (keyboardTitle) => {
-    // Aquí puedes guardar la nueva categoría en tu base de datos o realizar otras acciones necesarias
-    // En este ejemplo, simplemente imprimimos el título de la categoría en la consola
-    console.log("New keyboard title:", keyboardTitle);
-
-    // Generamos el nuevo .jsx con el nombre de la categoría y lo navegamos a la pantalla Home
-    const newKeyboardFileName = keyboardTitle + ".jsx";
-    // Aquí puedes escribir lógica para crear el nuevo archivo .jsx con el nombre de la categoría
-    // y guardarlo en el sistema de archivos
-
-    // Navegamos a la pantalla Home para ver la nueva categoría en la lista de keyboards
-    navigation.navigate("Home");
-  };
-
   {
     /* Here we change which keyboard we want to use */
   }
-  const handleKeyboardChange = (keyboard) => {
+  /**
+   * 
+   * handleKeyboard function original. Con esto si que cambia.
+   * 
+   * 
+   * const handleKeyboardChange = (keyboard) => {
     // Reboot all keyboards states
     setShowAlphabetKeyboard(false);
     setShowIconKeyboard(false);
@@ -78,6 +78,43 @@ export default function Home() {
         break;
       default:
         break;
+    }
+  };
+   *   
+   */
+  const handleKeyboardChange = (keyboardType) => {
+    if (keyboardType.startsWith("custom-")) {
+      const customKeyboardIndex = parseInt(keyboardType.split("-")[1]);
+      const customKeyboard = customKeyboards[customKeyboardIndex];
+      setKeyboardTitle(customKeyboard.title);
+      setSelectedCustomKeyboard(customKeyboard);
+    } else {
+      // Restablecer el teclado personalizado seleccionado
+      setSelectedCustomKeyboard(null);
+
+      // Lógica existente para cambiar entre teclados predefinidos
+      switch (keyboardType) {
+        case "alphabet":
+          setKeyboardTitle("Alphabet");
+          setShowAlphabetKeyboard(true);
+          setShowIconKeyboard(false);
+          setShowPictogramKeyboard(false);
+          break;
+        case "icon":
+          setKeyboardTitle("Icons");
+          setShowAlphabetKeyboard(false);
+          setShowIconKeyboard(true);
+          setShowPictogramKeyboard(false);
+          break;
+        case "pictogram":
+          setKeyboardTitle("Pictograms");
+          setShowAlphabetKeyboard(false);
+          setShowIconKeyboard(false);
+          setShowPictogramKeyboard(true);
+          break;
+        default:
+          break;
+      }
     }
   };
 
@@ -121,6 +158,13 @@ export default function Home() {
               {showPictogramKeyboard && (
                 <PictogramKeyboard handlePress={handleAddItem} />
               )}
+              {selectedCustomKeyboard && (
+                <CustomPictogramKeyboard
+                  title={selectedCustomKeyboard.title}
+                  pictograms={selectedCustomKeyboard.pictograms}
+                  handlePress={handleAddItem}
+                />
+              )}
 
               {/* Crea la barra inferior fija */}
               <View style={styles.bottomBar}>
@@ -142,6 +186,15 @@ export default function Home() {
                 >
                   <Text>Pictogram</Text>
                 </TouchableOpacity>
+                {customKeyboards.map((customKeyboard, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => handleKeyboardChange(`custom-${index}`)}
+                    style={styles.bottomBarButton}
+                  >
+                    <Text>{customKeyboard.title}</Text>
+                  </TouchableOpacity>
+                ))}
               </View>
             </View>
           )}
@@ -161,8 +214,10 @@ export default function Home() {
             <AddKeyboard
               handleSave={(keyboardTitle, selectedPictograms) => {
                 // Lógica para guardar el nuevo teclado con su título y pictogramas seleccionados
-                console.log("New keyboard:", keyboardTitle);
-                console.log("Selected pictograms:", selectedPictograms);
+                setCustomKeyboards([
+                  ...customKeyboards,
+                  { title: keyboardTitle, pictograms: selectedPictograms },
+                ]);
               }}
             />
           )}
