@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -17,6 +17,11 @@ import {
   widthPercentageToDP,
   heightPercentageToDP,
 } from "react-native-responsive-screen";
+import {
+  storeCustomKeyboards,
+  loadCustomKeyboards,
+} from "../src/CustomKeyboardContext";
+
 import AlphabetKeyboard from "../src/components/AlphabetKeyboard";
 import IconKeyboard from "../src/components/IconKeyboard";
 import SelectedItems from "../src/components/SelectedItems";
@@ -24,8 +29,8 @@ import PictogramKeyboard from "../src/components/PictogramKeyboard";
 import AddKeyboard from "../src/components/AddKeyboard";
 import CustomKeyboardContext from "../src/CustomKeyboardContext";
 import ProfileTab from "../src/components/ProfileTab";
-import "react-native-gesture-handler";
 import CustomPictogramKeyboard from "../src/components/CustomPictogramKeyboard";
+import "react-native-gesture-handler";
 
 //import firebase from "./src/utils/Firebase";
 
@@ -41,6 +46,21 @@ export default function Home() {
   const { customKeyboards, setCustomKeyboards } = useContext(
     CustomKeyboardContext
   );
+
+  // Cargar teclados personalizados al iniciar la aplicación
+  useEffect(() => {
+    const loadKeyboards = async () => {
+      const loadedKeyboards = await loadCustomKeyboards();
+      setCustomKeyboards(loadedKeyboards);
+    };
+
+    loadKeyboards();
+  }, []);
+
+  // Guardar teclados personalizados cuando se actualice la lista
+  useEffect(() => {
+    storeCustomKeyboards(customKeyboards);
+  }, [customKeyboards]);
 
   const handleAddItem = (item) => {
     setSelectedItems([...selectedItems, item]);
@@ -88,7 +108,7 @@ export default function Home() {
       const customKeyboard = customKeyboards[customKeyboardIndex];
       setKeyboardTitle(customKeyboard.title);
       setSelectedCustomKeyboard(customKeyboard);
-  
+
       // Ocultar todos los teclados predefinidos cuando se selecciona un teclado personalizado
       setShowAlphabetKeyboard(false);
       setShowIconKeyboard(false);
@@ -96,7 +116,7 @@ export default function Home() {
     } else {
       // Restablecer el teclado personalizado seleccionado
       setSelectedCustomKeyboard(null);
-  
+
       // Lógica existente para cambiar entre teclados predefinidos
       switch (keyboardType) {
         case "alphabet":
@@ -121,7 +141,7 @@ export default function Home() {
           break;
       }
     }
-  };  
+  };
 
   const [showPictogramKeyboard, setShowPictogramKeyboard] = useState(false);
 
@@ -167,6 +187,7 @@ export default function Home() {
                 <CustomPictogramKeyboard
                   title={selectedCustomKeyboard.title}
                   pictograms={selectedCustomKeyboard.pictograms}
+                  backgroundImage={selectedCustomKeyboard.backgroundImage} // Añade esta línea
                   handlePress={handleAddItem}
                 />
               )}
@@ -199,6 +220,7 @@ export default function Home() {
                   >
                     <Text>{customKeyboard.title}</Text>
                   </TouchableOpacity>
+                  
                 ))}
               </View>
             </View>
@@ -215,14 +237,24 @@ export default function Home() {
           options={{ title: "Settings" }}
         />
         <Drawer.Screen name="AddKeyboard" options={{ title: "Add keyboard" }}>
-          {() => (
+          {(props) => (
             <AddKeyboard
-              handleSave={(keyboardTitle, selectedPictograms) => {
-                // Lógica para guardar el nuevo teclado con su título y pictogramas seleccionados
+              {...props} // Agrega esta línea para pasar todas las propiedades recibidas al componente AddKeyboard
+              handleSave={(
+                keyboardTitle,
+                selectedPictograms,
+                selectedImage
+              ) => {
+                // Lógica para guardar el nuevo teclado con su título, pictogramas seleccionados y la imagen seleccionada
                 setCustomKeyboards([
                   ...customKeyboards,
-                  { title: keyboardTitle, pictograms: selectedPictograms },
+                  {
+                    title: keyboardTitle,
+                    pictograms: selectedPictograms,
+                    backgroundImage: selectedImage,
+                  },
                 ]);
+                props.navigation.goBack(); // Modifica esta línea para utilizar las propiedades pasadas al componente
               }}
             />
           )}
