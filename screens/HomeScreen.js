@@ -88,10 +88,15 @@ export default function Home() {
       const customKeyboard = customKeyboards[customKeyboardIndex];
       setKeyboardTitle(customKeyboard.title);
       setSelectedCustomKeyboard(customKeyboard);
+  
+      // Ocultar todos los teclados predefinidos cuando se selecciona un teclado personalizado
+      setShowAlphabetKeyboard(false);
+      setShowIconKeyboard(false);
+      setShowPictogramKeyboard(false);
     } else {
       // Restablecer el teclado personalizado seleccionado
       setSelectedCustomKeyboard(null);
-
+  
       // Lógica existente para cambiar entre teclados predefinidos
       switch (keyboardType) {
         case "alphabet":
@@ -116,7 +121,7 @@ export default function Home() {
           break;
       }
     }
-  };
+  };  
 
   const [showPictogramKeyboard, setShowPictogramKeyboard] = useState(false);
 
