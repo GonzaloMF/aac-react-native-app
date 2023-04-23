@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, TouchableOpacity, FlatList, Image } from 'react-native';
-import firebase from '../utils/Firebase';
+import firebase from '../../utils/Firebase';
 
 export default function PictogramKeyboard({ handlePress }) {
 

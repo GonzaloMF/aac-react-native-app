@@ -3,7 +3,7 @@ import {View, Text, TextInput, StyleSheet, TouchableOpacity,} from "react-native
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
-import firebase from "../utils/Firebase";
+import firebase from "../../utils/Firebase";
 
 
 const AddCategoryScreen = ({ navigation }) => {

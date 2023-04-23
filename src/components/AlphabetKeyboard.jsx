@@ -9,13 +9,14 @@ const AlphabetKeyboard = ({ handlePress }) => {
       <Text style={styles.title}>ALPHABETIC KEYBOARD</Text>
       <View style={styles.keyboard}>
         {alphabet.map((letter, index) => (
-          <TouchableOpacity
-            key={index}
-            onPress={() => handlePress(letter)}
-            style={styles.button}
-          >
-            <Text style={styles.buttonText}>{letter}</Text>
-          </TouchableOpacity>
+          <View key={index} style={styles.gridItem}>
+            <TouchableOpacity
+              onPress={() => handlePress({ name: letter, type: 'alphabet' })}
+              style={styles.button}
+            >
+              <Text style={styles.buttonText}>{letter}</Text>
+            </TouchableOpacity>
+          </View>
         ))}
       </View>
     </View>
@@ -36,12 +37,21 @@ const styles = StyleSheet.create({
   keyboard: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    width: '80%',
+  },
+  gridItem: {
+    width: '20%', // 5 columnas
+    height: '16.66%', // 6 filas
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   button: {
     backgroundColor: 'lightblue',
-    padding: 10,
-    margin: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 5,
+    width: '80%',
+    height: '80%',
   },
   buttonText: {
     fontSize: 18,

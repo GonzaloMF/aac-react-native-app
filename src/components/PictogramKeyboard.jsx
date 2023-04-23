@@ -3,24 +3,29 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 
 const pictograms = [
   {
-    name: "picto1",
+    name: "chicken",
     image: require("../images/chicken.png"),
+    type: "pictogram",
   },
   {
-    name: "picto2",
+    name: "fish",
     image: require("../images/fish.png"),
+    type: "pictogram",
   },
   {
-    name: "picto3",
+    name: "honey",
     image: require("../images/honey.png"),
+    type: "pictogram",
   },
   {
-    name: "picto4",
+    name: "egg",
     image: require("../images/egg-shell.png"),
+    type: "pictogram",
   },
   {
-    name: "picto5",
+    name: "meat",
     image: require("../images/meat.png"),
+    type: "pictogram",
   },
 
   // Agrega todos los pictogramas que necesites en esta matriz
@@ -35,7 +40,7 @@ const PictogramKeyboard = ({ handlePress }) => {
         {pictograms.map((pictogram) => (
           <TouchableOpacity
             key={pictogram.name}
-            onPress={() => handlePress(pictogram.name)}
+            onPress={() => handlePress(pictogram)}
           >
             <Image source={pictogram.image} style={styles.image} />
           </TouchableOpacity>

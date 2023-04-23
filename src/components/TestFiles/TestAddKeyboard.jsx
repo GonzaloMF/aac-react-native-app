@@ -50,14 +50,12 @@ const AddKeyboard = ({ handleSave, ...props }) => {
 
   const availablePictograms = [
     {
-      name: "chicken",
+      name: "picto1",
       image: require("../images/chicken.png"),
-      type:"pictogram",
     },
     {
-      name: "fish",
+      name: "picto2",
       image: require("../images/fish.png"),
-      type:"pictogram"
     },
     // ...otros pictogramas
   ];
@@ -83,28 +81,14 @@ const AddKeyboard = ({ handleSave, ...props }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>ADD KEYBOARD</Text>
       <TextInput
         style={styles.input}
         onChangeText={handleTitleChange}
         value={keyboardTitle}
         placeholder="Keyboard Title"
       />
-      <TouchableOpacity style={styles.imagePickerButton} onPress={pickImage}>
-        <Text style={styles.imagePickerButtonText}>Pick Image</Text>
-      </TouchableOpacity>
-      <FlatList
-        data={availablePictograms}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => handlePictogramSelection(item)}>
-            <Image source={item.image} style={styles.image} />
-          </TouchableOpacity>
-        )}
-        keyExtractor={(item) => item.name}
-        numColumns={4}
-        columnWrapperStyle={styles.columnWrapper}
-        contentContainerStyle={styles.contentContainer}
-      />
+      {/* 
+      
       <View style={styles.selectedPictograms}>
         {selectedPictograms.map((pictogram, index) => (
           <TouchableOpacity
@@ -115,6 +99,9 @@ const AddKeyboard = ({ handleSave, ...props }) => {
           </TouchableOpacity>
         ))}
       </View>
+      
+      */}
+      
       <TouchableOpacity style={styles.saveButton} onPress={handleSavePress}>
         <Text style={styles.saveButtonText}>Save</Text>
       </TouchableOpacity>

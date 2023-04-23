@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+//import Icon from '@expo/vector-icons';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
-const SelectedItems = ({ items, handleDelete }) => {
+
+const SelectedItems = ({ items, handlePlay }) => {
   const lastItem = items.length > 0 ? items[items.length - 1] : null;
   return (
     <View style={styles.container}>
@@ -11,24 +13,18 @@ const SelectedItems = ({ items, handleDelete }) => {
           <TouchableOpacity
             key={index}
             style={styles.itemContainer}
-            onPress={() => handleDelete(index)}
+            onPress={() => handlePlay(index)}
           >
-            <Text style={styles.itemText}>{item}</Text>
-           
+            {item.type === "icon" ? (
+              <Icon name={item.name} size={24} color="black" />
+            ) : item.type === "pictogram" ? (
+              <Image source={item.image} style={styles.itemImage} />
+            ) : (
+              <Text style={styles.itemText}>{item.name}</Text>
+            )}
           </TouchableOpacity>
         ))}
       </View>
-      {/* {lastItem ? (
-        <View style={styles.lastItemContainer}>
-          <Text style={styles.lastItemText}>Último elemento: {lastItem}</Text>
-          <Ionicons
-            name="ios-close-circle"
-            size={20}
-            color="#FF0000"
-            onPress={() => handleDelete(items.length - 1)}
-          />
-        </View>
-      ) : null} */}
     </View>
   );
 };
@@ -63,6 +59,10 @@ const styles = StyleSheet.create({
   lastItemText: {
     fontSize: 16,
     marginRight: 10,
+  },
+  itemImage: {
+    width: 24,
+    height: 24,
   },
 });
 

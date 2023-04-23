@@ -36,7 +36,7 @@ const IconKeyboard = ({ handlePress }) => {
         {icons.map((icon, index) => (
           <TouchableOpacity
             key={index}
-            onPress={() => handlePress(icon)}
+            onPress={() => handlePress({ type: "icon", name: icon })} // Modifica esta línea
             style={styles.button}
           >
             <Icon name={icon} size={24} color="white" />
