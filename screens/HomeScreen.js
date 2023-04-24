@@ -45,6 +45,7 @@ export default function Home() {
   const [selectedCustomKeyboard, setSelectedCustomKeyboard] = useState(null);
   const [keyboardTitle, setKeyboardTitle] = useState("Alphabet"); // Agrega esta línea para declarar el estado 'keyboardTitle' y su función de actualización 'setKeyboardTitle'
   const [showPictogramKeyboard, setShowPictogramKeyboard] = useState(false);
+  const [showLocalPictograms, setShowLocalPictograms] = useState(false);
 
   /* Load the new keyboards added when the app runs */
   const { customKeyboards, setCustomKeyboards } = useContext(
@@ -79,13 +80,13 @@ export default function Home() {
     const selectedItem = selectedItems[index];
     speak(selectedItem.name);
   };
-  /* ********************************************* */  
+  /* ********************************************* */
 
-  /* 
-   * const and funtionalities for letters and pictograms into the top-bar. 
+  /*
+   * const and funtionalities for letters and pictograms into the top-bar.
    * handleAddItem/Pictogram works when the user select the element on the keyboard
    * Delete options on the top-bar selection.
-  */
+   */
   const handleAddItem = (item) => {
     setSelectedItems([...selectedItems, item]);
     speak(item.name);
@@ -95,6 +96,7 @@ export default function Home() {
     setSelectedItems([...selectedItems, pictogram]);
     speak(pictogram.name);
   };
+
   const handleDeleteAllItems = () => {
     setSelectedItems([]);
   };
@@ -103,10 +105,10 @@ export default function Home() {
     newItems.pop();
     setSelectedItems(newItems);
   };
-  /* ********************************************* */  
+  /* ********************************************* */
 
-   /* function to delete the new keyboard added by the user */
-   const handleDeleteCustomKeyboard = (index) => {
+  /* function to delete the new keyboard added by the user */
+  const handleDeleteCustomKeyboard = (index) => {
     Alert.alert(
       "DELETE NEW KEYBOARD",
       "Are you sure that you like to DELETE this keyboard?",
@@ -122,12 +124,69 @@ export default function Home() {
             const newCustomKeyboards = [...customKeyboards];
             newCustomKeyboards.splice(index, 1);
             setCustomKeyboards(newCustomKeyboards);
+
+            // Select the previuos keyboard when is removed
+            if (index > 0) {
+              handleKeyboardChange(`custom-${index - 1}`);
+            } else if (newCustomKeyboards.length > 0) {
+              handleKeyboardChange(`custom-0`);
+            } else {
+              // If there is not a new keyboard to preview, go to the main keyboard
+              handleKeyboardChange("alphabet");
+            }
           },
         },
       ]
     );
   };
-  /* ********************************************* */  
+  /* ********************************************* */
+
+  /* function that we will use to add pictograms into the new keyboard created 
+  /* Refresh of customKeyboards list and add the pictogram into the new keyboard selected */
+  const handleAddPictogramToSelectedCustomKeyboard = async (pictogram) => {
+    if (
+      selectedCustomKeyboard.pictograms.find((p) => p.name === pictogram.name)
+    ) {
+      alert("Pictogram already added!");
+      return;
+    }
+    const updatedCustomKeyboard = {
+      ...selectedCustomKeyboard,
+      pictograms: [...selectedCustomKeyboard.pictograms, pictogram],
+    };
+    const updatedCustomKeyboards = customKeyboards.map((keyboard) =>
+      keyboard.title === selectedCustomKeyboard.title
+        ? updatedCustomKeyboard
+        : keyboard
+    );
+    setCustomKeyboards(updatedCustomKeyboards);
+    setSelectedCustomKeyboard(updatedCustomKeyboard);
+  };
+  /* ********************************************* */
+
+  /** function to remove a selected pictogram of any new keyboard */
+  const handleRemovePictogram = (pictogramToRemove) => {
+    const updatedPictograms = selectedCustomKeyboard.pictograms.filter(
+      (pictogram) => pictogram.name !== pictogramToRemove.name
+    );
+
+    // new state with the updated list of pictograms
+    const updatedCustomKeyboard = {
+      ...selectedCustomKeyboard,
+      pictograms: updatedPictograms,
+    };
+
+    // Update the selected custom keyboard in the list of custom keyboards
+    const updatedCustomKeyboards = customKeyboards.map((keyboard) =>
+      keyboard.title === selectedCustomKeyboard.title
+        ? updatedCustomKeyboard
+        : keyboard
+    );
+
+    // Update the state with the new list of custom keyboards and the selected custom keyboard
+    setCustomKeyboards(updatedCustomKeyboards);
+    setSelectedCustomKeyboard(updatedCustomKeyboard);
+  };
 
   /* Here we change which keyboard we want to use */
   const handleKeyboardChange = (keyboardType) => {
@@ -137,15 +196,15 @@ export default function Home() {
       setKeyboardTitle(customKeyboard.title);
       setSelectedCustomKeyboard(customKeyboard);
 
-      // Ocultar todos los teclados predefinidos cuando se selecciona un teclado personalizado
+      // Hide all predeterminae keyboards when is selected one of the new ones (new keyboards)
       setShowAlphabetKeyboard(false);
       setShowIconKeyboard(false);
       setShowPictogramKeyboard(false);
     } else {
-      // Restablecer el teclado personalizado seleccionado
+      // Reset new keyboards
       setSelectedCustomKeyboard(null);
 
-      // Lógica existente para cambiar entre teclados predefinidos
+      // Logic implemented to change between predeterminate keyboards
       switch (keyboardType) {
         case "alphabet":
           setKeyboardTitle("Alphabet");
@@ -188,11 +247,7 @@ export default function Home() {
                     onPress={speakAllItems}
                     style={styles.navigationBarButtons}
                   >
-                     <Ionicons
-                      name="ios-play"
-                      size={30}
-                      color="black"
-                    />
+                    <Ionicons name="ios-play" size={30} color="black" />
                   </TouchableOpacity>
                 )}
                 {selectedItems.length > 0 && (
@@ -230,12 +285,18 @@ export default function Home() {
                 <CustomPictogramKeyboard
                   title={selectedCustomKeyboard.title}
                   pictograms={selectedCustomKeyboard.pictograms}
-                  backgroundImage={selectedCustomKeyboard.backgroundImage} // Añade esta línea
+                  backgroundImage={selectedCustomKeyboard.backgroundImage}
                   handlePress={handleAddItem}
+                  handleAddPictogram={
+                    handleAddPictogramToSelectedCustomKeyboard
+                  }
+                  showLocalPictograms={showLocalPictograms}
+                  setShowLocalPictograms={setShowLocalPictograms}
+                  handleRemovePictogram={handleRemovePictogram}
                 />
               )}
 
-              {/* Crea la barra inferior fija */}
+              {/* Bottom bar - Keyboard seleccion */}
               <View style={styles.bottomBar}>
                 <TouchableOpacity
                   onPress={() => handleKeyboardChange("alphabet")}
@@ -282,13 +343,13 @@ export default function Home() {
         <Drawer.Screen name="AddKeyboard" options={{ title: "Add keyboard" }}>
           {(props) => (
             <AddKeyboard
-              {...props} // Agrega esta línea para pasar todas las propiedades recibidas al componente AddKeyboard
+              {...props} // pass all received properties to the AddKeyboard component
               handleSave={(
                 keyboardTitle,
                 selectedPictograms,
                 selectedImage
               ) => {
-                // Lógica para guardar el nuevo teclado con su título, pictogramas seleccionados y la imagen seleccionada
+                // Logic to save the new keyboard with its title, selected glyphs and the selected image
                 setCustomKeyboards([
                   ...customKeyboards,
                   {

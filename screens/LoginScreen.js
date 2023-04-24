@@ -21,7 +21,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
       .signInWithEmailAndPassword(email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
-        console.log('Logged in with:', user.email);
+        //console.log('Logged in with:', user.email);
         onLoginSuccess();
       })
       .catch((error) => alert(error.message));

@@ -7,12 +7,11 @@ import {
   useWindowDimensions,
   PixelRatio,
   Platform,
-  FlatList,
   Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
 import {
@@ -23,11 +22,8 @@ import {
   storeCustomKeyboards,
   loadCustomKeyboards,
 } from "../src/CustomKeyboardContext";
-import firebase, { storage } from "../src/utils/Firebase";
 
-//import { availablePictograms } from "../src/images";
-//import firebase from "../src/utils/Firebase";
-
+import * as Speech from "expo-speech";
 import AlphabetKeyboard from "../src/components/AlphabetKeyboard";
 import IconKeyboard from "../src/components/IconKeyboard";
 import SelectedItems from "../src/components/SelectedItems";
@@ -38,6 +34,8 @@ import ProfileTab from "../src/components/ProfileTab";
 import CustomPictogramKeyboard from "../src/components/CustomPictogramKeyboard";
 import "react-native-gesture-handler";
 
+//import firebase from "./src/utils/Firebase";
+
 const Drawer = createDrawerNavigator();
 
 export default function Home() {
@@ -46,50 +44,13 @@ export default function Home() {
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectedCustomKeyboard, setSelectedCustomKeyboard] = useState(null);
   const [keyboardTitle, setKeyboardTitle] = useState("Alphabet"); // Agrega esta línea para declarar el estado 'keyboardTitle' y su función de actualización 'setKeyboardTitle'
-  const [isAddingPictogram, setIsAddingPictogram] = useState(false);
-  const [pictograms, setPictograms] = useState([]);
+  const [showPictogramKeyboard, setShowPictogramKeyboard] = useState(false);
+  const [showLocalPictograms, setShowLocalPictograms] = useState(false);
 
+  /* Load the new keyboards added when the app runs */
   const { customKeyboards, setCustomKeyboards } = useContext(
     CustomKeyboardContext
   );
-
-  const handlePictogramSelection = (pictogram) => {
-    const customKeyboard = { ...selectedCustomKeyboard };
-    customKeyboard.pictograms.push(pictogram);
-    const newCustomKeyboards = [...customKeyboards];
-    newCustomKeyboards[selectedCustomKeyboardIndex] = customKeyboard;
-    setCustomKeyboards(newCustomKeyboards);
-  };
-
-  const fetchPictograms = async () => {
-    try {
-      setLoading(true);
-      const storageRef = firebase.storage().ref('path/to/pictograms'); // Asegúrate de proporcionar la ruta correcta a tus pictogramas en Firebase Storage
-      const pictogramsList = await storageRef.listAll();
-      const pictogramPromises = pictogramsList.items.map((item) =>
-        item.getDownloadURL().then((url) => ({
-          name: item.name,
-          image: { uri: url },
-        }))
-      );
-      const pictograms = await Promise.all(pictogramPromises);
-      setPictograms(pictograms);
-    } catch (error) {
-      console.error(
-        `Error fetching pictograms from Firebase Storage: ${error}`
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-  
-
-  useEffect(() => {
-    fetchPictogramsFromStorage().then((fetchedPictograms) =>
-      setPictograms(fetchedPictograms)
-    );
-  }, []);
-
   // Cargar teclados personalizados al iniciar la aplicación
   useEffect(() => {
     const loadKeyboards = async () => {
@@ -105,19 +66,108 @@ export default function Home() {
     storeCustomKeyboards(customKeyboards);
   }, [customKeyboards]);
 
+  /* const for the speech-device implementation */
+  const speak = (text) => {
+    Speech.speak(text);
+  };
+
+  const speakAllItems = () => {
+    const allText = selectedItems.map((item) => item.name).join(" ");
+    speak(allText);
+  };
+
+  const handlePlayItem = (index) => {
+    const selectedItem = selectedItems[index];
+    speak(selectedItem.name);
+  };
+  /* ********************************************* */
+
+  /*
+   * const and funtionalities for letters and pictograms into the top-bar.
+   * handleAddItem/Pictogram works when the user select the element on the keyboard
+   * Delete options on the top-bar selection.
+   */
   const handleAddItem = (item) => {
     setSelectedItems([...selectedItems, item]);
+    speak(item.name);
   };
 
-  const handleDeleteItem = (index) => {
+  const handleAddPictogram = (pictogram) => {
+    setSelectedItems([...selectedItems, pictogram]);
+    speak(pictogram.name);
+  };
+
+  const handleDeleteAllItems = () => {
+    setSelectedItems([]);
+  };
+  const handleDeleteLastItem = () => {
     const newItems = [...selectedItems];
-    newItems.splice(index, 1);
+    newItems.pop();
     setSelectedItems(newItems);
   };
+  /* ********************************************* */
 
-  {
-    /* Here we change which keyboard we want to use */
-  }
+  /* function to delete the new keyboard added by the user */
+  const handleDeleteCustomKeyboard = (index) => {
+    Alert.alert(
+      "DELETE NEW KEYBOARD",
+      "Are you sure that you like to DELETE this keyboard?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => {
+            const newCustomKeyboards = [...customKeyboards];
+            newCustomKeyboards.splice(index, 1);
+            setCustomKeyboards(newCustomKeyboards);
+
+            // Select the previuos keyboard when is removed
+            if (index > 0) {
+              handleKeyboardChange(`custom-${index - 1}`);
+            } else if (newCustomKeyboards.length > 0) {
+              handleKeyboardChange(`custom-0`);
+            } else {
+              // If there is not a new keyboard to preview, go to the main keyboard
+              handleKeyboardChange("alphabet");
+            }
+          },
+        },
+      ]
+    );
+  };
+  /* ********************************************* */
+  /* functions that we will use to add pictograms into the new keyboard created */
+  const handleAddPictogramToSelectedCustomKeyboard = async (pictogram) => {
+    if (selectedCustomKeyboard) {
+      const updatedPictograms = [...selectedCustomKeyboard.pictograms, pictogram];
+      const updatedCustomKeyboard = {
+        ...selectedCustomKeyboard,
+        pictograms: updatedPictograms,
+      };
+  
+      const updatedCustomKeyboards = customKeyboards.map((keyboard) =>
+        keyboard.title === selectedCustomKeyboard.title
+          ? updatedCustomKeyboard
+          : keyboard
+      );
+      setCustomKeyboards(updatedCustomKeyboards);
+    }
+  };
+  
+
+  
+  // Esta función actualiza la lista de customKeyboards y agrega 
+  //el pictograma al teclado personalizado seleccionado actualmente.
+  
+  
+
+  /* ********************************************* */
+
+  /* Here we change which keyboard we want to use */
   const handleKeyboardChange = (keyboardType) => {
     if (keyboardType.startsWith("custom-")) {
       const customKeyboardIndex = parseInt(keyboardType.split("-")[1]);
@@ -159,36 +209,6 @@ export default function Home() {
     }
   };
 
-  const handleDeleteKeyboard = (index) => {
-    Alert.alert(
-      "DELETE KEYBOARD",
-      "Are you shure that you want to delete this keyboard?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Delete",
-          onPress: () => {
-            const newCustomKeyboards = [...customKeyboards];
-            newCustomKeyboards.splice(index, 1);
-            setCustomKeyboards(newCustomKeyboards);
-          },
-          style: "destructive",
-        },
-      ]
-    );
-  };
-
-  const [showPictogramKeyboard, setShowPictogramKeyboard] = useState(false);
-
-  const handleDeleteLastItem = () => {
-    const newItems = [...selectedItems];
-    newItems.pop();
-    setSelectedItems(newItems);
-  };
-
   return (
     <NavigationContainer independent={true}>
       <Drawer.Navigator initialRouteName="Home">
@@ -198,18 +218,35 @@ export default function Home() {
               <View style={styles.selectedItemsContainer}>
                 <SelectedItems
                   items={selectedItems}
-                  handleDelete={(index) => handleDeleteItem(index)}
+                  handlePlay={(index) => handlePlayItem(index)}
                 />
+                {/* Speech and delete buttons*/}
+                {selectedItems.length > 0 && (
+                  <TouchableOpacity
+                    onPress={speakAllItems}
+                    style={styles.navigationBarButtons}
+                  >
+                    <Ionicons name="ios-play" size={30} color="black" />
+                  </TouchableOpacity>
+                )}
                 {selectedItems.length > 0 && (
                   <TouchableOpacity
                     onPress={handleDeleteLastItem}
-                    style={styles.deleteButton}
+                    style={styles.navigationBarButtons}
                   >
                     <Ionicons
                       name="ios-close-circle-outline"
-                      size={24}
+                      size={30}
                       color="#ff0000"
                     />
+                  </TouchableOpacity>
+                )}
+                {selectedItems.length > 0 && (
+                  <TouchableOpacity
+                    onPress={handleDeleteAllItems}
+                    style={styles.navigationBarButtons}
+                  >
+                    <Ionicons name="ios-trash" size={30} color="#ff0000" />
                   </TouchableOpacity>
                 )}
               </View>
@@ -217,34 +254,21 @@ export default function Home() {
               {showAlphabetKeyboard && (
                 <AlphabetKeyboard handlePress={handleAddItem} />
               )}
-              {showIconKeyboard && <IconKeyboard handlePress={handleAddItem} />}
+              {showIconKeyboard && (
+                <IconKeyboard handlePress={handleAddPictogram} />
+              )}
               {showPictogramKeyboard && (
-                <PictogramKeyboard handlePress={handleAddItem} />
+                <PictogramKeyboard handlePress={handleAddPictogram} />
               )}
               {selectedCustomKeyboard && (
                 <CustomPictogramKeyboard
                   title={selectedCustomKeyboard.title}
                   pictograms={selectedCustomKeyboard.pictograms}
-                  backgroundImage={selectedCustomKeyboard.backgroundImage} 
+                  backgroundImage={selectedCustomKeyboard.backgroundImage}
                   handlePress={handleAddItem}
-                  isAddingPictogram={isAddingPictogram}
-                  setIsAddingPictogram={setIsAddingPictogram} 
-                />
-              )}
-              {isAddingPictogram && (
-                <FlatList
-                  data={pictograms}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      onPress={() => handlePictogramSelection(item)}
-                    >
-                      <Image source={item.image} style={styles.image} />
-                    </TouchableOpacity>
-                  )}
-                  keyExtractor={(item) => item.name}
-                  numColumns={4}
-                  columnWrapperStyle={styles.columnWrapper}
-                  contentContainerStyle={styles.contentContainer}
+                  handleAddPictogram={handleAddPictogramToSelectedCustomKeyboard}
+                  showLocalPictograms={showLocalPictograms}
+                  setShowLocalPictograms={setShowLocalPictograms}
                 />
               )}
 
@@ -272,26 +296,11 @@ export default function Home() {
                   <TouchableOpacity
                     key={index}
                     onPress={() => handleKeyboardChange(`custom-${index}`)}
+                    onLongPress={() => handleDeleteCustomKeyboard(index)} // delete new keyboard
                     style={styles.bottomBarButton}
                   >
                     <Text>{customKeyboard.title}</Text>
                   </TouchableOpacity>
-                ))}
-                {customKeyboards.map((customKeyboard, index) => (
-                  <View key={index} style={styles.customKeyboardWrapper}>
-                    <TouchableOpacity
-                      onPress={() => handleKeyboardChange(`custom-${index}`)}
-                      style={styles.bottomBarButton}
-                    >
-                      <Text>{customKeyboard.title}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => handleDeleteKeyboard(index)}
-                      style={styles.deleteKeyboardButton}
-                    >
-                      <Text style={styles.deleteKeyboardButtonText}>X</Text>
-                    </TouchableOpacity>
-                  </View>
                 ))}
               </View>
             </View>
@@ -404,7 +413,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
   },
-  deleteButton: {
+  navigationBarButtons: {
     marginLeft: 10,
   },
   bottomBar: {

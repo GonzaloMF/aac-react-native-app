@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -7,9 +7,13 @@ import {
   StyleSheet,
   FlatList,
   Image,
+  Alert,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import CustomKeyboardContext from "../CustomKeyboardContext";
+import { storage, database } from "../utils/Firebase";
 
 
 const AddKeyboard = ({ handleSave, ...props }) => {
@@ -18,6 +22,51 @@ const AddKeyboard = ({ handleSave, ...props }) => {
   const [selectedPictograms, setSelectedPictograms] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [symbols, setSymbols] = useState([]);
+  const [showSymbols, setShowSymbols] = useState(false);
+  const { customKeyboards } = useContext(CustomKeyboardContext);
+
+  const availablePictograms = [
+    {
+      name: "chicken",
+      image: require("../images/chicken.png"),
+      type: "pictogram",
+    },
+    {
+      name: "fish",
+      image: require("../images/fish.png"),
+      type: "pictogram",
+    },
+    // ...otros pictogramas
+  ];
+  
+  /*const loadPictogramsFromFirebase = async () => {
+    try {
+      const listResult = await storage().ref('pictograms').listAll();
+      const pictogramList = await Promise.all(
+        listResult.items.map(async (item) => {
+          const url = await item.getDownloadURL();
+          return {
+            name: item.name,
+            image: { uri: url },
+            type: 'pictogram',
+          };
+        })
+      );
+      setPictograms(pictogramList);
+    } catch (error) {
+      console.error('Error loading pictograms from Firebase Storage:', error);
+    }
+  };
+  useEffect(() => {
+    loadPictogramsFromFirebase();
+    loadSymbols();
+  }, []);
+  */
+  
+  
+  const toggleSymbolsVisibility = () => {
+    setShowSymbols(!showSymbols);
+  };
 
   const loadSymbols = async () => {
     const symbolDirectory = `${FileSystem.documentDirectory}images`;
@@ -33,7 +82,6 @@ const AddKeyboard = ({ handleSave, ...props }) => {
     loadSymbols();
   }, []);
 
-
   /* Funcion para manejar la selección de imagen */
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -48,24 +96,17 @@ const AddKeyboard = ({ handleSave, ...props }) => {
     }
   };
 
-  const availablePictograms = [
-    {
-      name: "chicken",
-      image: require("../images/chicken.png"),
-      type:"pictogram",
-    },
-    {
-      name: "fish",
-      image: require("../images/fish.png"),
-      type:"pictogram"
-    },
-    // ...otros pictogramas
-  ];
-
+  // Attribute 'isBackground' added to avoid duplicates
   const handlePictogramSelection = (pictogram) => {
-    setSelectedPictograms([...selectedPictograms, pictogram]);
+    if (!selectedPictograms.find((p) => p.name === pictogram.name)) {
+      setSelectedPictograms([
+        ...selectedPictograms,
+        { ...pictogram, isBackground: false },
+      ]);
+    }
   };
 
+  // Remove the pictogram added by touching it
   const handlePictogramDeselection = (index) => {
     const newSelectedPictograms = [...selectedPictograms];
     newSelectedPictograms.splice(index, 1);
@@ -77,8 +118,19 @@ const AddKeyboard = ({ handleSave, ...props }) => {
   };
 
   const handleSavePress = () => {
+    if (
+      !keyboardTitle ||
+      keyboardTitle.trim() === "" ||
+      customKeyboards.some((kb) => kb.title === keyboardTitle)
+    ) {
+      Alert.alert(
+        "Error",
+        "A new keyboard with this title already exists or is empty. Please choose a different title."
+      );
+      return;
+    }
     handleSave(keyboardTitle, selectedPictograms, selectedImage);
-    props.navigation.navigate('Home');
+    props.navigation.navigate("Home");
   };
 
   return (
@@ -90,30 +142,42 @@ const AddKeyboard = ({ handleSave, ...props }) => {
         value={keyboardTitle}
         placeholder="Keyboard Title"
       />
-      <TouchableOpacity style={styles.imagePickerButton} onPress={pickImage}>
-        <Text style={styles.imagePickerButtonText}>Pick Image</Text>
+      
+      <TouchableOpacity
+        style={[styles.imagePickerButton, styles.symbolsButton]}
+        onPress={toggleSymbolsVisibility}
+      >
+        <Text style={styles.symbolsButtonText}>
+          {showSymbols ? "Hide pictograms" : "Show pictograms"}
+        </Text>
       </TouchableOpacity>
-      <FlatList
-        data={availablePictograms}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => handlePictogramSelection(item)}>
-            <Image source={item.image} style={styles.image} />
-          </TouchableOpacity>
-        )}
-        keyExtractor={(item) => item.name}
-        numColumns={4}
-        columnWrapperStyle={styles.columnWrapper}
-        contentContainerStyle={styles.contentContainer}
-      />
-      <View style={styles.selectedPictograms}>
-        {selectedPictograms.map((pictogram, index) => (
-          <TouchableOpacity
-            key={pictogram.name}
-            onPress={() => handlePictogramDeselection(index)}
-          >
-            <Image source={pictogram.image} style={styles.image} />
-          </TouchableOpacity>
-        ))}
+      {showSymbols && (
+        <FlatList
+          data={availablePictograms}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => handlePictogramSelection(item)}>
+              <Image source={item.image} style={styles.image} />
+            </TouchableOpacity>
+          )}
+          keyExtractor={(item) => item.name}
+          numColumns={4}
+          columnWrapperStyle={styles.columnWrapper}
+          contentContainerStyle={styles.contentContainer}
+        />
+      )}
+
+      <Text style={styles.actualKeyboardContent}>Actual keyboard content:</Text>
+      <View style={styles.selectedPictogramsContainer}>
+        <View style={styles.selectedPictograms}>
+          {selectedPictograms.map((pictogram, index) => (
+            <TouchableOpacity
+              key={pictogram.name}
+              onPress={() => handlePictogramDeselection(index)}
+            >
+              <Image source={pictogram.image} style={styles.image} />
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
       <TouchableOpacity style={styles.saveButton} onPress={handleSavePress}>
         <Text style={styles.saveButtonText}>Save</Text>
@@ -132,53 +196,87 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
-    },
-    input: {
+  },
+  input: {
     borderWidth: 1,
     borderColor: "#ccc",
     width: "80%",
     marginBottom: 20,
     paddingHorizontal: 10,
     paddingVertical: 5,
-    },
-    imagePickerButton: {
+  },
+  imagePickerButton: {
     backgroundColor: "#000",
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 5,
     marginBottom: 20,
-    },
-    imagePickerButtonText: {
+  },
+  imagePickerButtonText: {
     color: "#fff",
     fontSize: 18,
-    },
-    image: {
-    width: 60,
-    height: 60,
+  },
+  image: {
+    width: 70,
+    height: 70,
     marginRight: 10,
-    },
-    columnWrapper: {
+  },
+  columnWrapper: {
     justifyContent: "center",
-    },
-    contentContainer: {
+  },
+  contentContainer: {
     justifyContent: "center",
-    },
-    selectedPictograms: {
+  },
+  selectedPictograms: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
     marginBottom: 20,
-    },
-    saveButton: {
+  },
+  saveButton: {
     backgroundColor: "#000",
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 5,
-    },
-    saveButtonText: {
+    marginBottom: 20,
+  },
+  saveButtonText: {
     color: "#fff",
     fontSize: 18,
-    },
-    });
-    
-    export default AddKeyboard;
+  },
+  buttonRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "80%",
+    marginBottom: 20,
+  },
+  symbolsButton: {
+    marginLeft: 10,
+  },
+  symbolsButtonText: {
+    color: "#fff",
+    fontSize: 18,
+    marginLeft: 5,
+  },
+  actualKeyboardContent: {
+    alignSelf: "flex-start",
+    marginLeft: 50,
+    marginBottom: 10,
+    fontWeight: "bold",
+  },
+  selectedPictogramsContainer: {
+    backgroundColor: "#f0f0f0",
+    borderColor: "#ccc",
+    borderWidth: 2,
+    borderRadius: 5,
+    padding: 10,
+    width: "90%",
+  },
+  selectedPictograms: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+  },
+});
+
+export default AddKeyboard;

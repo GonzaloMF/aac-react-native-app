@@ -16,7 +16,7 @@ export default function App() {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
       if (authUser) {
-        setUser(authUsers);
+        setUser(authUser);
       } else {
         setUser(null);
       }
@@ -30,16 +30,17 @@ export default function App() {
       <NavigationContainer ACindependent={true}>
         <View style={styles.container}>
           <Stack.Navigator>
-            {/* {user ? (
+             {user ? (
             <Stack.Screen options={{headerShown: false}} name="Home" component={HomeScreen} />
           ) : (
             <Stack.Screen options={{headerShown: false}} name="Login" component={LoginScreen} />
-          )} */}
-            <Stack.Screen
+          )}
+           {/** 
+            * <Stack.Screen
               options={{ headerShown: false }}
               name="Home"
               component={HomeScreen}
-            />
+            />*/} 
           </Stack.Navigator>
         </View>
       </NavigationContainer>
