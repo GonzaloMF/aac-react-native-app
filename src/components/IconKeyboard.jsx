@@ -1,33 +1,41 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome5";
 
 const IconKeyboard = ({ handlePress }) => {
-  const icons = [
-    'smile',
-    'smile-beam',
-    'smile-wink',
-    'sad-cry',
-    'sad-tear',
-    'angry',
-    'thumbs-down',
-    'thumbs-up',
-    'check',
-    'hospital',
-    'bed',
-    'bicycle',
-    'blind',
-    'pencil-alt',
-    'phone',
-    'football-ball',
-    'basketball-ball',
-    'table-tennis',
-    'cat',
-    'dog',
-    'horse',
-    'kiwi-bird',
-  
-  ];
+    const icons = [
+      'smile',
+      'smile-beam',
+      'smile-wink',
+      'tired',
+      'sad-tear',
+      'angry',
+      'thumbs-down',
+      'thumbs-up',
+      'check',
+      'hospital',
+      'bed',
+      'bicycle',
+      'blind',
+      'pencil-alt',
+      'phone',
+      'football-ball',
+      'basketball-ball',
+      'table-tennis',
+      'cat',
+      'dog',
+      'horse',
+      'kiwi-bird',
+      'utensils',
+      'cookie',
+      'walking',
+      'water',
+      'home',
+      'car',
+      'music',
+      'wind',
+    
+    ];
 
   return (
     <View style={styles.container}>
@@ -36,10 +44,10 @@ const IconKeyboard = ({ handlePress }) => {
         {icons.map((icon, index) => (
           <TouchableOpacity
             key={index}
-            onPress={() => handlePress({ type: "icon", name: icon })} // Modifica esta línea
+            onPress={() => handlePress({ type: "icon", name: icon })}
             style={styles.button}
           >
-            <Icon name={icon} size={24} color="white" />
+            <Icon name={icon} size={30} color="white" />
           </TouchableOpacity>
         ))}
       </View>
@@ -50,23 +58,28 @@ const IconKeyboard = ({ handlePress }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
   },
   keyboard: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    width: "80%", // Ajustar el ancho del teclado al tamaño de la pantalla
   },
   button: {
-    backgroundColor: 'lightblue',
-    padding: 10,
-    margin: 5,
+    backgroundColor: "lightblue",
+    padding: 8, // Aumentar el padding
+    margin: 6, // Aumentar el margen
     borderRadius: 5,
+    justifyContent: "center", // Centrar verticalmente el ícono
+    alignItems: "center",
+    minWidth: 60, // Establecer un ancho mínimo para los botones
+    minHeight: 60, // Establecer una altura mínima para los botones
   },
 });
 

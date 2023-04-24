@@ -3,28 +3,38 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 
 const pictograms = [
   {
-    name: "chicken",
-    image: require("../images/chicken.png"),
+    name: "I",
+    image: require("../images/actions/yo.png"),
     type: "pictogram",
   },
   {
-    name: "fish",
-    image: require("../images/fish.png"),
+    name: "drink",
+    image: require("../images/actions/beber.png"),
     type: "pictogram",
   },
   {
-    name: "honey",
-    image: require("../images/honey.png"),
+    name: "you",
+    image: require("../images/actions/tu.png"),
     type: "pictogram",
   },
   {
-    name: "egg",
-    image: require("../images/egg-shell.png"),
+    name: "play",
+    image: require("../images/actions/jugar.png"),
     type: "pictogram",
   },
   {
-    name: "meat",
-    image: require("../images/meat.png"),
+    name: "read a book",
+    image: require("../images/school/read.png"),
+    type: "pictogram",
+  },
+  {
+    name: "school",
+    image: require("../images/school/school.png"),
+    type: "pictogram",
+  },
+  {
+    name: "music class",
+    image: require("../images/school/music.png"),
     type: "pictogram",
   },
 

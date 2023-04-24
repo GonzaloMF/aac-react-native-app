@@ -17,12 +17,12 @@ const CustomPictogramKeyboard = (props) => {
   const [localPictograms] = useState([
     {
       name: "meat",
-      image: require("../images/meat.png"),
+      image: require("../images/food/meat.png"),
       type: "pictogram",
     },
     {
       name: "honey",
-      image: require("../images/honey.png"),
+      image: require("../images/food/honey.png"),
       type: "pictogram",
     },
   ]);

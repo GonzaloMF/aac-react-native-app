@@ -28,15 +28,34 @@ const AddKeyboard = ({ handleSave, ...props }) => {
   const availablePictograms = [
     {
       name: "chicken",
-      image: require("../images/chicken.png"),
+      image: require("../images/food/chicken.png"),
       type: "pictogram",
     },
     {
       name: "fish",
-      image: require("../images/fish.png"),
+      image: require("../images/food/fish.png"),
       type: "pictogram",
     },
-    // ...otros pictogramas
+    {
+      name: "honey",
+      image: require("../images/food/honey.png"),
+      type: "pictogram",
+    },
+    {
+      name: "cheese",
+      image: require("../images/food/queso.png"),
+      type: "pictogram",
+    },
+    {
+      name: "fish soup",
+      image: require("../images/food/fishsoup.png"),
+      type: "pictogram",
+    },
+    {
+      name: "pasta",
+      image: require("../images/food/macarrones.png"),
+      type: "pictogram",
+    },
   ];
   
   /*const loadPictogramsFromFirebase = async () => {
