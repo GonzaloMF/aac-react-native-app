@@ -1,4 +1,4 @@
-import React, { useState, } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -10,6 +10,8 @@ import {
   ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
+import { TextInput } from "react-native-gesture-handler";
 
 const CustomPictogramKeyboard = (props) => {
   const {
@@ -34,10 +36,40 @@ const CustomPictogramKeyboard = (props) => {
       image: require("../images/food/honey.png"),
       type: "pictogram",
     },
-    
   ]);
 
-  /* function to delete a selected pictogram in the new keyboard*/
+  const [customPictogramName, setCustomPictogramName] = useState("");
+  const [showCustomPictogramModal, setShowCustomPictogramModal] = useState(false);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      handleAddCustomPictogram(result.uri);
+    }
+  };
+
+  const handleAddCustomPictogram = (uri) => {
+    if (!customPictogramName) {
+      Alert.alert("Error", "Please enter a name for the custom pictogram");
+      return;
+    }
+
+    const newPictogram = {
+      name: customPictogramName,
+      image: { uri },
+      type: "pictogram",
+    };
+
+    handleAddPictogram(newPictogram);
+    setCustomPictogramName("");
+  };
+
   const handleRemovePictogramFromCustomKeyboard = (
     pictogramToRemove,
     handleRemovePictogram
@@ -73,6 +105,12 @@ const CustomPictogramKeyboard = (props) => {
           onPress={() => setShowLocalPictograms(!showLocalPictograms)}
         >
           <Ionicons name="add-circle" size={30} color="black" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.addPictogramButton}
+          onPress={() => setShowCustomPictogramModal(true)}
+        >
+          <Text style={styles.addPictogramButtonText}>Add pictogram</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.keyboard}>
@@ -144,9 +182,47 @@ const CustomPictogramKeyboard = (props) => {
           </View>
         </Modal>
       )}
+
+      {showCustomPictogramModal && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={showCustomPictogramModal}
+          onRequestClose={() => {
+            setShowCustomPictogramModal(false);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalTitle}>Add Custom Pictogram</Text>
+              <TextInput
+                style={styles.textInput}
+                onChangeText={(text) => setCustomPictogramName(text)}
+                value={customPictogramName}
+                placeholder="Enter custom pictogram name"
+              />
+              <TouchableOpacity
+                style={{ ...styles.button, backgroundColor: "#2196F3" }}
+                onPress={pickImage}
+              >
+                <Text style={styles.textStyle}>Select Image</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{ ...styles.button, backgroundColor: "#2196F3" }}
+                onPress={() => {
+                  setShowCustomPictogramModal(false);
+                }}
+              >
+                <Text style={styles.textStyle}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      )}
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -174,7 +250,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   localImage: {
-    width: 80, 
+    width: 80,
     height: 80,
     marginRight: 10,
   },
@@ -221,8 +297,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    width: '50%',
-    maxHeight: '50%', 
+    width: "50%",
+    maxHeight: "50%",
   },
   modalTitle: {
     marginBottom: 15,
@@ -241,6 +317,17 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
+  },
+  textInput: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
+    marginBottom: 10,
+    marginTop: 10,
+    width: "80%",
   },
 });
 
