@@ -38,19 +38,22 @@ const CustomPictogramKeyboard = (props) => {
     },
   ]);
 
+  /* states and functions to storage a image/pictogram selected by the user */
   const [customPictogramName, setCustomPictogramName] = useState("");
-  const [showCustomPictogramModal, setShowCustomPictogramModal] = useState(false);
+  const [showCustomPictogramModal, setShowCustomPictogramModal] =
+    useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [1, 1], //change the aspect to square when you get the image (select a image and you have to crop), 
       quality: 1,
     });
 
     if (!result.cancelled) {
-      handleAddCustomPictogram(result.uri);
+      setSelectedImage(result.uri);
     }
   };
 
@@ -62,13 +65,21 @@ const CustomPictogramKeyboard = (props) => {
 
     const newPictogram = {
       name: customPictogramName,
-      image: { uri },
+      image: { uri: selectedImage }, 
       type: "pictogram",
     };
 
     handleAddPictogram(newPictogram);
     setCustomPictogramName("");
+    setSelectedImage(null); // Clean pre-viwed image
   };
+
+  const closeModal = () => {
+    setShowCustomPictogramModal(false);
+    setSelectedImage(null);
+  };
+
+  /* *************************************************** */
 
   const handleRemovePictogramFromCustomKeyboard = (
     pictogramToRemove,
@@ -189,32 +200,56 @@ const CustomPictogramKeyboard = (props) => {
           transparent={true}
           visible={showCustomPictogramModal}
           onRequestClose={() => {
-            setShowCustomPictogramModal(false);
+            closeModal();
           }}
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalTitle}>Add Custom Pictogram</Text>
-              <TextInput
-                style={styles.textInput}
-                onChangeText={(text) => setCustomPictogramName(text)}
-                value={customPictogramName}
-                placeholder="Enter custom pictogram name"
-              />
               <TouchableOpacity
                 style={{ ...styles.button, backgroundColor: "#2196F3" }}
                 onPress={pickImage}
               >
                 <Text style={styles.textStyle}>Select Image</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={{ ...styles.button, backgroundColor: "#2196F3" }}
-                onPress={() => {
-                  setShowCustomPictogramModal(false);
-                }}
-              >
-                <Text style={styles.textStyle}>Close</Text>
-              </TouchableOpacity>
+              <View style={styles.imagePreviewContainer}>
+                {selectedImage && (
+                  <Image
+                    source={{ uri: selectedImage }}
+                    style={styles.imagePreview}
+                  />
+                )}
+                {!selectedImage && (
+                  <View style={styles.emptyImagePreview} />
+                )}
+                <TextInput
+                  style={styles.textInput}
+                  onChangeText={(text) => setCustomPictogramName(text)}
+                  value={customPictogramName}
+                  placeholder="Enter here a name for the new pictogram"
+                />
+              </View>
+              <View style={styles.modalActions}>
+                <TouchableOpacity
+                  style={{ ...styles.button, backgroundColor: "#2196F3", marginRight: 10, }}
+                  onPress={() => {
+                    closeModal();
+                  }}
+                >
+                  <Text style={styles.textStyle}>Close</Text>
+                </TouchableOpacity>
+                {selectedImage && (
+                  <TouchableOpacity
+                    style={{ ...styles.button, backgroundColor: "#2196F3" ,marginLeft: 10,}}
+                    onPress={() => {
+                      handleAddCustomPictogram();
+                      closeModal();
+                    }}
+                  >
+                    <Text style={styles.textStyle}>Save</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
             </View>
           </View>
         </Modal>
@@ -222,7 +257,6 @@ const CustomPictogramKeyboard = (props) => {
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -317,6 +351,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
+    paddingHorizontal: 20,
   },
   textInput: {
     height: 40,
@@ -328,6 +363,32 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginTop: 10,
     width: "80%",
+  },
+  imagePreviewContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "80%",
+  },
+  imagePreview: {
+    width: 60,
+    height: 60,
+    marginRight: 10,
+    borderWidth: 1,
+    borderColor: "black",
+  },
+  emptyImagePreview: {
+    width: 60,
+    height: 60,
+    marginRight: 10,
+    borderWidth: 1,
+    borderColor: "black",
+    backgroundColor: "#f0f0f0",
+  },
+  modalActions: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
   },
 });
 
