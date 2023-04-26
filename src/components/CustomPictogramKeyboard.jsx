@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  Alert,
+  Modal,
+  ScrollView,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 const CustomPictogramKeyboard = (props) => {
@@ -25,10 +34,14 @@ const CustomPictogramKeyboard = (props) => {
       image: require("../images/food/honey.png"),
       type: "pictogram",
     },
+    
   ]);
 
   /* function to delete a selected pictogram in the new keyboard*/
-  const handleRemovePictogramFromCustomKeyboard = (pictogramToRemove, handleRemovePictogram) => {
+  const handleRemovePictogramFromCustomKeyboard = (
+    pictogramToRemove,
+    handleRemovePictogram
+  ) => {
     Alert.alert(
       "Remove Pictogram",
       "Are you sure you want to DELETE this pictogram from the keyboard?",
@@ -45,7 +58,7 @@ const CustomPictogramKeyboard = (props) => {
       { cancelable: true }
     );
   };
-  
+
   return (
     <View style={styles.container}>
       <Image
@@ -56,10 +69,10 @@ const CustomPictogramKeyboard = (props) => {
       <View style={styles.titleContainer}>
         <Text style={styles.title}>{title.toUpperCase()}</Text>
         <TouchableOpacity
-          style={styles.addButton}
+          style={styles.addPictogramButton}
           onPress={() => setShowLocalPictograms(!showLocalPictograms)}
         >
-          <Ionicons name="add-circle" size={30} color="blue" />
+          <Ionicons name="add-circle" size={30} color="black" />
         </TouchableOpacity>
       </View>
       <View style={styles.keyboard}>
@@ -67,7 +80,12 @@ const CustomPictogramKeyboard = (props) => {
           <TouchableOpacity
             key={pictogram.name}
             onPress={() => handlePress(pictogram)}
-            onLongPress={() => handleRemovePictogramFromCustomKeyboard(pictogram, handleRemovePictogram)}
+            onLongPress={() =>
+              handleRemovePictogramFromCustomKeyboard(
+                pictogram,
+                handleRemovePictogram
+              )
+            }
           >
             <Image source={pictogram.image} style={styles.image} />
           </TouchableOpacity>
@@ -75,25 +93,60 @@ const CustomPictogramKeyboard = (props) => {
       </View>
 
       {showLocalPictograms && (
-        <View style={styles.localPictogramsContainer}>
-          {localPictograms.map((pictogram) => (
-            <TouchableOpacity
-              key={pictogram.name}
-              onPress={() => {
-                handleAddPictogram(pictogram);
-                setShowLocalPictograms(false);
-              }}
-              onLongPress={() => handleRemovePictogramFromCustomKeyboard(pictogram, handleRemovePictogram)}
-            >
-              <Image source={pictogram.image} style={styles.image} />
-            </TouchableOpacity>
-          ))}
-        </View>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={showLocalPictograms}
+          onRequestClose={() => {
+            setShowLocalPictograms(false);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalTitle}>Select a local pictogram</Text>
+              <View style={styles.localPictogramsContainer}>
+                <ScrollView
+                  contentContainerStyle={styles.localPictogramsScrollView}
+                  horizontal={false}
+                  showsVerticalScrollIndicator={false}
+                >
+                  {localPictograms.map((pictogram) => (
+                    <TouchableOpacity
+                      key={pictogram.name}
+                      onPress={() => {
+                        handleAddPictogram(pictogram);
+                        setShowLocalPictograms(false);
+                      }}
+                      onLongPress={() =>
+                        handleRemovePictogramFromCustomKeyboard(
+                          pictogram,
+                          handleRemovePictogram
+                        )
+                      }
+                    >
+                      <Image
+                        source={pictogram.image}
+                        style={styles.localImage}
+                      />
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
+              <TouchableOpacity
+                style={{ ...styles.button, backgroundColor: "#2196F3" }}
+                onPress={() => {
+                  setShowLocalPictograms(false);
+                }}
+              >
+                <Text style={styles.textStyle}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       )}
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -106,6 +159,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 20,
   },
+  titleContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   keyboard: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -115,20 +173,74 @@ const styles = StyleSheet.create({
     height: 100,
     marginRight: 10,
   },
-  titleContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  addButton: {
+  localImage: {
+    width: 80, 
+    height: 80,
     marginRight: 10,
-    marginBottom:15,
+  },
+  localPictogramsContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 10,
+    maxHeight: 320, // Ajusta la altura máxima del contenedor para limitar la cantidad de filas
+  },
+  localPictogramsScrollView: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  addPictogramButton: {
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 15,
   },
   backgroundImage: {
     position: "absolute",
     width: "100%",
     height: "100%",
     opacity: 0.5,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    width: '50%',
+    maxHeight: '50%', 
+  },
+  modalTitle: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 18,
+  },
+  button: {
+    backgroundColor: "#F194FF",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    marginTop: 15,
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });
 

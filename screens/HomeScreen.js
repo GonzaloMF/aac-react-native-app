@@ -34,7 +34,6 @@ import ProfileTab from "../src/components/ProfileTab";
 import CustomPictogramKeyboard from "../src/components/CustomPictogramKeyboard";
 import "react-native-gesture-handler";
 
-//import firebase from "./src/utils/Firebase";
 
 const Drawer = createDrawerNavigator();
 

@@ -14,7 +14,7 @@ export const CustomKeyboardProvider = ({ children }) => {
   );
 };
 
-/* De esta manera guardaremos localmente los Keyboards añadidos nuevos */
+/* functions to store the new keyboards added by the user */
 export const storeCustomKeyboards = async (customKeyboards) => {
   try {
     const jsonValue = JSON.stringify(customKeyboards);
@@ -38,6 +38,6 @@ export const loadCustomKeyboards = async () => {
   }
 };
 
-/*********************/
+/* ************************************************ */
 
 export default CustomKeyboardContext;
