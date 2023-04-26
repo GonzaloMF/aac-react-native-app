@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, } from "react";
 import {
   View,
   Text,
@@ -14,7 +14,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CustomKeyboardContext from "../CustomKeyboardContext";
-import { storage, database } from "../utils/Firebase";
+import { useFocusEffect } from "@react-navigation/native";
 
 const AddKeyboard = ({ handleSave, ...props }) => {
   const [keyboardTitle, setKeyboardTitle] = useState("");
@@ -26,9 +26,7 @@ const AddKeyboard = ({ handleSave, ...props }) => {
   const { customKeyboards } = useContext(CustomKeyboardContext);
   // Agrega un estado para controlar la visibilidad del modal
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const loadPictograms = () => {
-    setPictograms(availablePictograms);
-  };
+
 
   const availablePictograms = [
     {
@@ -63,8 +61,12 @@ const AddKeyboard = ({ handleSave, ...props }) => {
     },
   ];
 
+  const loadPictograms = () => {
+    setPictograms(availablePictograms);
+  };
+
   const toggleSymbolsVisibility = () => {
-    setIsModalVisible(!isModalVisible); // Cambia el estado del modal aquí
+    setIsModalVisible(!isModalVisible);
   };
 
   const loadSymbols = async () => {
@@ -81,7 +83,17 @@ const AddKeyboard = ({ handleSave, ...props }) => {
     loadPictograms();
     loadSymbols();
   }, [selectedPictograms]);
-
+  
+  // with this useFocusEffect, the new keyboard tab will be clean when the user add one new.
+  useFocusEffect(
+    React.useCallback(() => {
+      // Clean the state
+      setKeyboardTitle("");
+      setSelectedPictograms([]);
+      setSelectedImage(null);
+    }, [])
+  );
+  
   // Attribute 'isBackground' added to avoid duplicates
   const handlePictogramSelection = (pictogram) => {
     if (!selectedPictograms.find((p) => p.name === pictogram.name)) {
@@ -290,7 +302,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 5,
     padding: 20,
-    width: "90%", width: "70%",
+    width: "70%",
   },
   closeButton: {
     position: "absolute",
