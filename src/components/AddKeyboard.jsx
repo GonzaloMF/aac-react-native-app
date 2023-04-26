@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -26,7 +26,6 @@ const AddKeyboard = ({ handleSave, ...props }) => {
   const { customKeyboards } = useContext(CustomKeyboardContext);
   // Agrega un estado para controlar la visibilidad del modal
   const [isModalVisible, setIsModalVisible] = useState(false);
-
 
   const availablePictograms = [
     {
@@ -83,7 +82,7 @@ const AddKeyboard = ({ handleSave, ...props }) => {
     loadPictograms();
     loadSymbols();
   }, [selectedPictograms]);
-  
+
   // with this useFocusEffect, the new keyboard tab will be clean when the user add one new.
   useFocusEffect(
     React.useCallback(() => {
@@ -93,7 +92,7 @@ const AddKeyboard = ({ handleSave, ...props }) => {
       setSelectedImage(null);
     }, [])
   );
-  
+
   // Attribute 'isBackground' added to avoid duplicates
   const handlePictogramSelection = (pictogram) => {
     if (!selectedPictograms.find((p) => p.name === pictogram.name)) {
@@ -142,12 +141,10 @@ const AddKeyboard = ({ handleSave, ...props }) => {
       />
 
       <TouchableOpacity
-        style={[styles.imagePickerButton, styles.symbolsButton]}
+        style={[styles.imagePickerButton, styles.F]}
         onPress={toggleSymbolsVisibility}
       >
-        <Text style={styles.symbolsButtonText}>
-          {showSymbols ? "Hide pictograms" : "Show pictograms"}
-        </Text>
+        <Text style={styles.symbolsButtonText}>Show local pictograms</Text>
       </TouchableOpacity>
 
       <Modal
@@ -158,7 +155,7 @@ const AddKeyboard = ({ handleSave, ...props }) => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-          <TouchableOpacity
+            <TouchableOpacity
               style={styles.closeButton}
               onPress={toggleSymbolsVisibility}
             >

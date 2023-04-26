@@ -48,7 +48,7 @@ const CustomPictogramKeyboard = (props) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [1, 1], //change the aspect to square when you get the image (select a image and you have to crop), 
+      aspect: [1, 1], //change the aspect to square when you get the image (select a image and you have to crop),
       quality: 1,
     });
 
@@ -65,7 +65,7 @@ const CustomPictogramKeyboard = (props) => {
 
     const newPictogram = {
       name: customPictogramName,
-      image: { uri: selectedImage }, 
+      image: { uri: selectedImage },
       type: "pictogram",
     };
 
@@ -121,7 +121,7 @@ const CustomPictogramKeyboard = (props) => {
           style={styles.addPictogramButton}
           onPress={() => setShowCustomPictogramModal(true)}
         >
-          <Text style={styles.addPictogramButtonText}>Add pictogram</Text>
+          <Text style={styles.addPictogramButtonText}>ADD PICTOGRAM</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.keyboard}>
@@ -219,9 +219,7 @@ const CustomPictogramKeyboard = (props) => {
                     style={styles.imagePreview}
                   />
                 )}
-                {!selectedImage && (
-                  <View style={styles.emptyImagePreview} />
-                )}
+                {!selectedImage && <View style={styles.emptyImagePreview} />}
                 <TextInput
                   style={styles.textInput}
                   onChangeText={(text) => setCustomPictogramName(text)}
@@ -231,7 +229,11 @@ const CustomPictogramKeyboard = (props) => {
               </View>
               <View style={styles.modalActions}>
                 <TouchableOpacity
-                  style={{ ...styles.button, backgroundColor: "#2196F3", marginRight: 10, }}
+                  style={{
+                    ...styles.button,
+                    backgroundColor: "#2196F3",
+                    marginRight: 10,
+                  }}
                   onPress={() => {
                     closeModal();
                   }}
@@ -240,7 +242,11 @@ const CustomPictogramKeyboard = (props) => {
                 </TouchableOpacity>
                 {selectedImage && (
                   <TouchableOpacity
-                    style={{ ...styles.button, backgroundColor: "#2196F3" ,marginLeft: 10,}}
+                    style={{
+                      ...styles.button,
+                      backgroundColor: "#2196F3",
+                      marginLeft: 10,
+                    }}
                     onPress={() => {
                       handleAddCustomPictogram();
                       closeModal();
@@ -294,7 +300,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 10,
-    maxHeight: 320, // Ajusta la altura máxima del contenedor para limitar la cantidad de filas
+    maxHeight: 320, //Set the maximum height of the container to limit the number of rows
   },
   localPictogramsScrollView: {
     flexDirection: "row",
@@ -346,6 +352,15 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 2,
     marginTop: 15,
+  },
+  addPictogramButtonText: {
+    color: "#fff",
+    fontSize: 13,
+    backgroundColor: "#000",
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 5,
+    marginBottom: 8,
   },
   textStyle: {
     color: "white",
