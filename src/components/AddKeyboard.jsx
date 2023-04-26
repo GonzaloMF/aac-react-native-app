@@ -8,13 +8,13 @@ import {
   FlatList,
   Image,
   Alert,
+  Modal,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CustomKeyboardContext from "../CustomKeyboardContext";
 import { storage, database } from "../utils/Firebase";
-
 
 const AddKeyboard = ({ handleSave, ...props }) => {
   const [keyboardTitle, setKeyboardTitle] = useState("");
@@ -24,6 +24,11 @@ const AddKeyboard = ({ handleSave, ...props }) => {
   const [symbols, setSymbols] = useState([]);
   const [showSymbols, setShowSymbols] = useState(false);
   const { customKeyboards } = useContext(CustomKeyboardContext);
+  // Agrega un estado para controlar la visibilidad del modal
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const loadPictograms = () => {
+    setPictograms(availablePictograms);
+  };
 
   const availablePictograms = [
     {
@@ -57,34 +62,9 @@ const AddKeyboard = ({ handleSave, ...props }) => {
       type: "pictogram",
     },
   ];
-  
-  /*const loadPictogramsFromFirebase = async () => {
-    try {
-      const listResult = await storage().ref('pictograms').listAll();
-      const pictogramList = await Promise.all(
-        listResult.items.map(async (item) => {
-          const url = await item.getDownloadURL();
-          return {
-            name: item.name,
-            image: { uri: url },
-            type: 'pictogram',
-          };
-        })
-      );
-      setPictograms(pictogramList);
-    } catch (error) {
-      console.error('Error loading pictograms from Firebase Storage:', error);
-    }
-  };
-  useEffect(() => {
-    loadPictogramsFromFirebase();
-    loadSymbols();
-  }, []);
-  */
-  
-  
+
   const toggleSymbolsVisibility = () => {
-    setShowSymbols(!showSymbols);
+    setIsModalVisible(!isModalVisible); // Cambia el estado del modal aquí
   };
 
   const loadSymbols = async () => {
@@ -98,22 +78,9 @@ const AddKeyboard = ({ handleSave, ...props }) => {
   };
 
   useEffect(() => {
+    loadPictograms();
     loadSymbols();
-  }, []);
-
-  /* Funcion para manejar la selección de imagen */
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri);
-    }
-  };
+  }, [selectedPictograms]);
 
   // Attribute 'isBackground' added to avoid duplicates
   const handlePictogramSelection = (pictogram) => {
@@ -161,7 +128,7 @@ const AddKeyboard = ({ handleSave, ...props }) => {
         value={keyboardTitle}
         placeholder="Keyboard Title"
       />
-      
+
       <TouchableOpacity
         style={[styles.imagePickerButton, styles.symbolsButton]}
         onPress={toggleSymbolsVisibility}
@@ -170,21 +137,38 @@ const AddKeyboard = ({ handleSave, ...props }) => {
           {showSymbols ? "Hide pictograms" : "Show pictograms"}
         </Text>
       </TouchableOpacity>
-      {showSymbols && (
-        <FlatList
-          data={availablePictograms}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => handlePictogramSelection(item)}>
-              <Image source={item.image} style={styles.image} />
-            </TouchableOpacity>
-          )}
-          keyExtractor={(item) => item.name}
-          numColumns={4}
-          columnWrapperStyle={styles.columnWrapper}
-          contentContainerStyle={styles.contentContainer}
-        />
-      )}
 
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={toggleSymbolsVisibility}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+          <TouchableOpacity
+              style={styles.closeButton}
+              onPress={toggleSymbolsVisibility}
+            >
+              <Text style={styles.closeButtonText}>×</Text>
+            </TouchableOpacity>
+            <FlatList
+              data={availablePictograms}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  onPress={() => handlePictogramSelection(item)}
+                >
+                  <Image source={item.image} style={styles.image} />
+                </TouchableOpacity>
+              )}
+              keyExtractor={(item) => item.name}
+              numColumns={4}
+              columnWrapperStyle={styles.columnWrapper}
+              contentContainerStyle={styles.contentContainer}
+            />
+          </View>
+        </View>
+      </Modal>
       <Text style={styles.actualKeyboardContent}>Actual keyboard content:</Text>
       <View style={styles.selectedPictogramsContainer}>
         <View style={styles.selectedPictograms}>
@@ -295,6 +279,26 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "#fff",
+    borderRadius: 5,
+    padding: 20,
+    width: "90%", width: "70%",
+  },
+  closeButton: {
+    position: "absolute",
+    top: "2%",
+    right: "2%",
+  },
+  closeButtonText: {
+    fontSize: 24,
   },
 });
 

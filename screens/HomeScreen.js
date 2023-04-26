@@ -22,8 +22,9 @@ import {
   storeCustomKeyboards,
   loadCustomKeyboards,
 } from "../src/CustomKeyboardContext";
-
+import { Asset } from "expo-asset";
 import * as Speech from "expo-speech";
+
 import AlphabetKeyboard from "../src/components/AlphabetKeyboard";
 import IconKeyboard from "../src/components/IconKeyboard";
 import SelectedItems from "../src/components/SelectedItems";
@@ -60,11 +61,12 @@ export default function Home() {
     loadKeyboards();
   }, []);
 
-  // Guardar teclados personalizados cuando se actualice la lista
+  // Save the new keyboards when the list is updated
   useEffect(() => {
     storeCustomKeyboards(customKeyboards);
   }, [customKeyboards]);
 
+  
   /* const for the speech-device implementation */
   const speak = (text) => {
     Speech.speak(text);
