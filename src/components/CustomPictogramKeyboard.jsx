@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,19 +10,31 @@ import {
   ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
 import { TextInput } from "react-native-gesture-handler";
+import { useTranslation } from "react-i18next";
+import * as ImagePicker from "expo-image-picker";
 
 const CustomPictogramKeyboard = (props) => {
+  const { t } = useTranslation();
+
+  /* states and functions to storage a image/pictogram selected by the user */
+  const [customPictogramName, setCustomPictogramName] = useState("");
+  const [showCustomPictogramModal, setShowCustomPictogramModal] =
+    useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  /* states to view the pictograms and Title selected by AddKeyboard */
+  const [title, setTitle] = useState("");
+  const [pictograms, setPictograms] = useState([]);
+  const [backgroundImage, setBackgroundImage] = useState("");
+
   const {
-    title,
-    pictograms,
-    backgroundImage,
     handlePress,
     handleAddPictogram,
     handleRemovePictogram,
     showLocalPictograms,
     setShowLocalPictograms,
+    selectedCustomKeyboard,
   } = props;
 
   const [localPictograms] = useState([
@@ -38,11 +50,13 @@ const CustomPictogramKeyboard = (props) => {
     },
   ]);
 
-  /* states and functions to storage a image/pictogram selected by the user */
-  const [customPictogramName, setCustomPictogramName] = useState("");
-  const [showCustomPictogramModal, setShowCustomPictogramModal] =
-    useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
+  useEffect(() => {
+    if (selectedCustomKeyboard) {
+      setTitle(selectedCustomKeyboard.title);
+      setPictograms(selectedCustomKeyboard.pictograms);
+      setBackgroundImage(selectedCustomKeyboard.backgroundImage);
+    }
+  }, [selectedCustomKeyboard]);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -109,19 +123,28 @@ const CustomPictogramKeyboard = (props) => {
         style={styles.backgroundImage}
         resizeMode="contain"
       />
+      <Text style={styles.title}>{title.toUpperCase()}</Text>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>{title.toUpperCase()}</Text>
         <TouchableOpacity
           style={styles.addPictogramButton}
           onPress={() => setShowLocalPictograms(!showLocalPictograms)}
         >
-          <Ionicons name="add-circle" size={30} color="black" />
+          <View style={styles.iconWithText}>
+            <Ionicons name="add-circle" size={25} color="white" />
+            <Text style={styles.addPictogramButtonText}>
+              ADD LOCAL PICTOGRAMS
+            </Text>
+          </View>
         </TouchableOpacity>
+
         <TouchableOpacity
           style={styles.addPictogramButton}
           onPress={() => setShowCustomPictogramModal(true)}
         >
-          <Text style={styles.addPictogramButtonText}>ADD PICTOGRAM</Text>
+          <View style={styles.iconWithText}>
+            <Ionicons name="add-circle" size={25} color="white" />
+            <Text style={styles.addPictogramButtonText}>IMPORT PICTOGRAM</Text>
+          </View>
         </TouchableOpacity>
       </View>
       <View style={styles.keyboard}>
@@ -137,6 +160,7 @@ const CustomPictogramKeyboard = (props) => {
             }
           >
             <Image source={pictogram.image} style={styles.image} />
+            <Text style={styles.namePictogram}>{t(pictogram.name)}</Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -357,10 +381,13 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 13,
     backgroundColor: "#000",
-    paddingHorizontal: 15,
+    paddingHorizontal: 8,
     paddingVertical: 8,
     borderRadius: 5,
-    marginBottom: 8,
+    marginBottom: 2,
+  },
+  namePictogram: {
+    textAlign: "center",
   },
   textStyle: {
     color: "white",
@@ -391,6 +418,14 @@ const styles = StyleSheet.create({
     marginRight: 10,
     borderWidth: 1,
     borderColor: "black",
+  },
+  iconWithText: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#000",
+    paddingHorizontal: 15,
+    paddingVertical: 1,
+    borderRadius: 5,
   },
   emptyImagePreview: {
     width: 60,

@@ -1,10 +1,17 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  FlatList,
+} from "react-native";
 import { useTranslation } from "react-i18next";
 
 const pictograms = [
   {
-    name: "I",
+    name: "i",
     image: require("../images/actions/yo.png"),
     type: "pictogram",
   },
@@ -24,7 +31,7 @@ const pictograms = [
     type: "pictogram",
   },
   {
-    name: "read a book",
+    name: "readABook",
     image: require("../images/school/read.png"),
     type: "pictogram",
   },
@@ -34,7 +41,7 @@ const pictograms = [
     type: "pictogram",
   },
   {
-    name: "music class",
+    name: "musicClass",
     image: require("../images/school/music.png"),
     type: "pictogram",
   },
@@ -46,16 +53,19 @@ const PictogramKeyboard = ({ handlePress }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{t("pictogramKeyboard")}</Text>
-      <View style={styles.keyboard}>
-        {pictograms.map((pictogram) => (
-          <TouchableOpacity
-            key={pictogram.name}
-            onPress={() => handlePress(pictogram)}
-          >
-            <Image source={pictogram.image} style={styles.image} />
+      <FlatList
+        data={pictograms}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => handlePress(item)}>
+            <View style={styles.pictogramContainer}>
+              <Image source={item.image} style={styles.image} />
+              <Text style={styles.namePictogram}>{t(item.name)}</Text>
+            </View>
           </TouchableOpacity>
-        ))}
-      </View>
+        )}
+        numColumns={6}
+        keyExtractor={(item) => item.name}
+      />
     </View>
   );
 };
@@ -63,7 +73,6 @@ const PictogramKeyboard = ({ handlePress }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
   },
   title: {
@@ -71,14 +80,22 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 20,
   },
-  keyboard: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-  },
   image: {
     width: 100,
     height: 100,
     marginRight: 10,
+  },
+  namePictogram: {
+    textAlign: "center",
+  },
+  listContainer: {
+    flex: 1,
+    width: "100%",
+    paddingHorizontal: 20,
+  },
+  pictogramContainer: {
+    marginBottom: 10,
+    alignItems: "center",
   },
 });
 

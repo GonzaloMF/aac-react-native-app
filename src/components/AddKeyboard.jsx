@@ -47,7 +47,7 @@ const AddKeyboard = ({ handleSave, ...props }) => {
       type: "pictogram",
     },
     {
-      name: "fish soup",
+      name: "fishSoup",
       image: require("../images/food/fishsoup.png"),
       type: "pictogram",
     },
@@ -78,8 +78,7 @@ const AddKeyboard = ({ handleSave, ...props }) => {
 
   useEffect(() => {
     loadPictograms();
-    loadSymbols();
-  }, [selectedPictograms]);
+  }, [symbols]);
 
   // with this useFocusEffect, the new keyboard tab will be clean when the user add one new.
   useFocusEffect(

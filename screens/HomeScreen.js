@@ -33,7 +33,7 @@ import SelectedItems from "../src/components/SelectedItems";
 import PictogramKeyboard from "../src/components/PictogramKeyboard";
 import AddKeyboard from "../src/components/AddKeyboard";
 import CustomKeyboardContext from "../src/CustomKeyboardContext";
-import ProfileTab from "../src/components/ProfileTab";
+import ProfileTab from "../src/components/Profile";
 import CustomPictogramKeyboard from "../src/components/CustomPictogramKeyboard";
 import Settings from "../src/components/Settings";
 import "react-native-gesture-handler";
@@ -46,7 +46,7 @@ export default function Home() {
   const [showIconKeyboard, setShowIconKeyboard] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectedCustomKeyboard, setSelectedCustomKeyboard] = useState(null);
-  const [keyboardTitle, setKeyboardTitle] = useState("Alphabet"); // Agrega esta línea para declarar el estado 'keyboardTitle' y su función de actualización 'setKeyboardTitle'
+  const [keyboardTitle, setKeyboardTitle] = useState("Alphabet"); // this declare 'keyboardTitle' state and the update function 'setKeyboardTitle'
   const [showPictogramKeyboard, setShowPictogramKeyboard] = useState(false);
   const [showLocalPictograms, setShowLocalPictograms] = useState(false);
 
@@ -301,6 +301,7 @@ export default function Home() {
                   showLocalPictograms={showLocalPictograms}
                   setShowLocalPictograms={setShowLocalPictograms}
                   handleRemovePictogram={handleRemovePictogram}
+                  selectedCustomKeyboard={selectedCustomKeyboard}
                 />
               )}
 
@@ -345,8 +346,7 @@ export default function Home() {
               {...props} // pass all received properties to the AddKeyboard component
               handleSave={(
                 keyboardTitle,
-                selectedPictograms,
-                selectedImage
+                selectedPictograms
               ) => {
                 // Logic to save the new keyboard with its title, selected glyphs and the selected image
                 setCustomKeyboards([
@@ -354,7 +354,6 @@ export default function Home() {
                   {
                     title: keyboardTitle,
                     pictograms: selectedPictograms,
-                    backgroundImage: selectedImage,
                   },
                 ]);
                 props.navigation.goBack();

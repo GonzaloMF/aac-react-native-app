@@ -42,8 +42,8 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   gridItem: {
-    width: '20%', // 5 columnas
-    height: '16.66%', // 6 filas
+    width: '20%', // 5 columns
+    height: '16.66%', // 6 rows
     justifyContent: 'center',
     alignItems: 'center',
   },

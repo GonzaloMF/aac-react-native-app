@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 import { auth } from "../utils/Firebase";
 
-const ProfileTab = () => {
+const Profile = () => {
   const navigation = useNavigation();
   const [userData, setUserData] = useState(auth.currentUser);
 
@@ -35,7 +35,7 @@ const ProfileTab = () => {
   );
 };
 
-export default ProfileTab;
+export default Profile;
 
 const styles = StyleSheet.create({
   container: {
