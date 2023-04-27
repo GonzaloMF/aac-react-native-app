@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { useTranslation } from "react-i18next";
 
 const pictograms = [
   {
@@ -37,15 +38,14 @@ const pictograms = [
     image: require("../images/school/music.png"),
     type: "pictogram",
   },
-
-  // Agrega todos los pictogramas que necesites en esta matriz
-]; 
+];
 
 const PictogramKeyboard = ({ handlePress }) => {
-  
+  const { t } = useTranslation();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>PICTOGRAM KEYBOARD</Text>
+      <Text style={styles.title}>{t("pictogramKeyboard")}</Text>
       <View style={styles.keyboard}>
         {pictograms.map((pictogram) => (
           <TouchableOpacity

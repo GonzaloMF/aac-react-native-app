@@ -1,36 +1,54 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
+/* Conditions for english translation */
 const resources = {
   en: {
     translation: {
-      // Conditions for english translation
+      //Menu tabs
+      profile: "Profile",
+      back:"Back",
+      settings: "Settings",
+      addKeyboard: "Add Keyboard",
+      //Keyboards
       alphabet: "Alphabet",
       icon: "Icon",
       pictogram: "Pictogram",
-      profileTab: "Profile",
-      back:"Back",
-      settingsTab: "Settings",
+      alphabetKeyboard: "ALPHABET KEYBOARD",
+      iconKeyboard: "ICON KEYBOARD",
+      pictogramKeyboard: "PICTOGRAM KEYBOARD",
+      //Alerts
       deleteKeyboardTitle: "DELETE NEW KEYBOARD",
       deleteKeyboardMessage: "Are you sure that you like to DELETE this keyboard?",
       cancel: "Cancel",
       delete: "Delete",
+      pictogramAlreadyAdded_T: "INVALID PICTOGRAM",
+      pictogramAlreadyAdded: "Pictogram already added! Try another one!",
 
     },
   },
+   /* Conditions for spanish translations */
   es: {
     translation: {
-      // Conditions for spanish translations
+      //Menu tabs
+      profile: "Perfil",
+      back:"Atrás",
+      settings: "Ajustes",
+      addKeyboard: "Añadir teclado",
+      //Keyboards
       alphabet: "Alfabeto",
       icon: "Icono",
       pictogram: "Pictograma",
-      profileTab: "Perfil",
-      back:"Atrás",
-      settingsTab: "Ajustes",
+      alphabetKeyboard: "TECLADO ALFABETICO",
+      iconKeyboard: "TECLADO DE ICONOS",
+      pictogramKeyboard: "TECLADO DE PICTOGRAMAS",
+      //Alerts
       deleteKeyboardTitle: "ELIMINAR TECLADO NUEVO",
       deleteKeyboardMessage: "¿Estás seguro de que deseas ELIMINAR este teclado?",
       cancel: "Cancelar",
       delete: "Eliminar",
+      pictogramAlreadyAdded_T: "PICTOGRAMA INVALIDO",
+      pictogramAlreadyAdded: "¡El pictograma ya había sido añadido!¡Prueba otro!",
     },
   },
 };

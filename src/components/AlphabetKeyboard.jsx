@@ -1,12 +1,14 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { useTranslation } from "react-i18next";
 
 const AlphabetKeyboard = ({ handlePress }) => {
   const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!?".split('');
+  const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>ALPHABETIC KEYBOARD</Text>
+      <Text style={styles.title}>{t("alphabetKeyboard")}</Text>
       <View style={styles.keyboard}>
         {alphabet.map((letter, index) => (
           <View key={index} style={styles.gridItem}>

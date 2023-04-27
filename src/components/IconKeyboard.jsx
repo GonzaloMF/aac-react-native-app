@@ -1,45 +1,47 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { useTranslation } from "react-i18next";
 
 const IconKeyboard = ({ handlePress }) => {
-    const icons = [
-      'smile',
-      'smile-beam',
-      'smile-wink',
-      'tired',
-      'sad-tear',
-      'angry',
-      'thumbs-down',
-      'thumbs-up',
-      'check',
-      'hospital',
-      'bed',
-      'bicycle',
-      'blind',
-      'pencil-alt',
-      'phone',
-      'football-ball',
-      'basketball-ball',
-      'table-tennis',
-      'cat',
-      'dog',
-      'horse',
-      'kiwi-bird',
-      'utensils',
-      'cookie',
-      'walking',
-      'water',
-      'home',
-      'car',
-      'music',
-      'wind',
-    
-    ];
+  const icons = [
+    "smile",
+    "smile-beam",
+    "smile-wink",
+    "tired",
+    "sad-tear",
+    "angry",
+    "thumbs-down",
+    "thumbs-up",
+    "check",
+    "hospital",
+    "bed",
+    "bicycle",
+    "blind",
+    "pencil-alt",
+    "phone",
+    "football-ball",
+    "basketball-ball",
+    "table-tennis",
+    "cat",
+    "dog",
+    "horse",
+    "kiwi-bird",
+    "utensils",
+    "cookie",
+    "walking",
+    "water",
+    "home",
+    "car",
+    "music",
+    "wind",
+  ];
+
+  const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>ICON KEYBOARD</Text>
+      <Text style={styles.title}>{t("iconKeyboard")}</Text>
       <View style={styles.keyboard}>
         {icons.map((icon, index) => (
           <TouchableOpacity

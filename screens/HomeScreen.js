@@ -153,7 +153,9 @@ export default function Home() {
     if (
       selectedCustomKeyboard.pictograms.find((p) => p.name === pictogram.name)
     ) {
-      alert("Pictogram already added!");
+      Alert.alert(
+        t("pictogramAlreadyAdded_T"),
+        t("pictogramAlreadyAdded"));
       return;
     }
     const updatedCustomKeyboard = {
@@ -336,20 +338,8 @@ export default function Home() {
             </View>
           )}
         </Drawer.Screen>
-        <Drawer.Screen
-          name="Profile"
-          component={ProfileTab}
-          options={{ title: "Profile" }}
-        />
-        <Drawer.Screen name="Settings" options={{ title: "Settings" }}>
-          {(props) => (
-            <Settings
-              {...props}
-              changeLanguage={(language) => changeLanguage(language)}
-            />
-          )}
-        </Drawer.Screen>
-        <Drawer.Screen name="AddKeyboard" options={{ title: "Add keyboard" }}>
+        
+        <Drawer.Screen name="AddKeyboard" options={{ title: t("addKeyboard") }}>
           {(props) => (
             <AddKeyboard
               {...props} // pass all received properties to the AddKeyboard component
@@ -372,36 +362,21 @@ export default function Home() {
             />
           )}
         </Drawer.Screen>
+        <Drawer.Screen
+          name="Profile"
+          component={ProfileTab}
+          options={{ title: t("profile") }}
+        />
+        <Drawer.Screen name="Settings" options={{ title: t("settings") }}>
+          {(props) => (
+            <Settings
+              {...props}
+              changeLanguage={(language) => changeLanguage(language)}
+            />
+          )}
+        </Drawer.Screen>
       </Drawer.Navigator>
     </NavigationContainer>
-  );
-}
-
-function ProfileScreen({ navigation }) {
-  return (
-    <View style={styles.screen}>
-      <Text style={styles.screenText}>{t("profileTab")}</Text>
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={styles.button}
-      >
-        <Text style={styles.buttonText}>{t("back")}</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
-
-function SettingsScreen({ navigation }) {
-  return (
-    <View style={styles.screen}>
-      <Text style={styles.screenText}>{t("settingsTab")}</Text>
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={styles.button}
-      >
-        <Text style={styles.buttonText}>Back</Text>
-      </TouchableOpacity>
-    </View>
   );
 }
 
