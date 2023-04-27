@@ -4,18 +4,33 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   en: {
     translation: {
-      // Aquí van todas las traducciones en inglés
+      // Conditions for english translation
       alphabet: "Alphabet",
       icon: "Icon",
       pictogram: "Pictogram",
+      profileTab: "Profile",
+      back:"Back",
+      settingsTab: "Settings",
+      deleteKeyboardTitle: "DELETE NEW KEYBOARD",
+      deleteKeyboardMessage: "Are you sure that you like to DELETE this keyboard?",
+      cancel: "Cancel",
+      delete: "Delete",
+
     },
   },
   es: {
     translation: {
-      // Aquí van todas las traducciones en español
+      // Conditions for spanish translations
       alphabet: "Alfabeto",
       icon: "Icono",
       pictogram: "Pictograma",
+      profileTab: "Perfil",
+      back:"Atrás",
+      settingsTab: "Ajustes",
+      deleteKeyboardTitle: "ELIMINAR TECLADO NUEVO",
+      deleteKeyboardMessage: "¿Estás seguro de que deseas ELIMINAR este teclado?",
+      cancel: "Cancelar",
+      delete: "Eliminar",
     },
   },
 };

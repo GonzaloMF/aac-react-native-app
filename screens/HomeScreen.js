@@ -41,7 +41,7 @@ import "react-native-gesture-handler";
 const Drawer = createDrawerNavigator();
 
 export default function Home() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [showAlphabetKeyboard, setShowAlphabetKeyboard] = useState(true);
   const [showIconKeyboard, setShowIconKeyboard] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -69,9 +69,12 @@ export default function Home() {
     storeCustomKeyboards(customKeyboards);
   }, [customKeyboards]);
 
-  /* const for the speech-device implementation */
+  /* const for the Speed Device Generator (SDG) implementatio.
+  * Bilingual SDG option implemented  
+  */
   const speak = (text) => {
-    Speech.speak(text);
+    const voiceOptions = { language: i18n.language === 'en' ? 'en-US' : 'es-ES' };
+    Speech.speak(text, voiceOptions);
   };
 
   const speakAllItems = () => {
@@ -113,15 +116,15 @@ export default function Home() {
   /* function to delete the new keyboard added by the user */
   const handleDeleteCustomKeyboard = (index) => {
     Alert.alert(
-      "DELETE NEW KEYBOARD",
-      "Are you sure that you like to DELETE this keyboard?",
+      t("deleteKeyboardTitle"),
+      t("deleteKeyboardMessage"),
       [
         {
-          text: "Cancel",
+          text: t("cancel"),
           style: "cancel",
         },
         {
-          text: "Delete",
+          text: t("delete"),
           style: "destructive",
           onPress: () => {
             const newCustomKeyboards = [...customKeyboards];
@@ -364,7 +367,7 @@ export default function Home() {
                     backgroundImage: selectedImage,
                   },
                 ]);
-                props.navigation.goBack(); // Modifica esta línea para utilizar las propiedades pasadas al componente
+                props.navigation.goBack();
               }}
             />
           )}
@@ -377,12 +380,12 @@ export default function Home() {
 function ProfileScreen({ navigation }) {
   return (
     <View style={styles.screen}>
-      <Text style={styles.screenText}>Profile tab</Text>
+      <Text style={styles.screenText}>{t("profileTab")}</Text>
       <TouchableOpacity
         onPress={() => navigation.goBack()}
         style={styles.button}
       >
-        <Text style={styles.buttonText}>Back</Text>
+        <Text style={styles.buttonText}>{t("back")}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -391,7 +394,7 @@ function ProfileScreen({ navigation }) {
 function SettingsScreen({ navigation }) {
   return (
     <View style={styles.screen}>
-      <Text style={styles.screenText}>Settings tab</Text>
+      <Text style={styles.screenText}>{t("settingsTab")}</Text>
       <TouchableOpacity
         onPress={() => navigation.goBack()}
         style={styles.button}
