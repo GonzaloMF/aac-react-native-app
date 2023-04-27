@@ -10,9 +10,7 @@ import {
   Alert,
   Modal,
 } from "react-native";
-import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CustomKeyboardContext from "../CustomKeyboardContext";
 import { useFocusEffect } from "@react-navigation/native";
 

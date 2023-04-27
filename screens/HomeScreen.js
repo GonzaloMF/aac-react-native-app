@@ -22,6 +22,8 @@ import {
   storeCustomKeyboards,
   loadCustomKeyboards,
 } from "../src/CustomKeyboardContext";
+import { useTranslation } from "react-i18next";
+
 import { Asset } from "expo-asset";
 import * as Speech from "expo-speech";
 
@@ -33,12 +35,13 @@ import AddKeyboard from "../src/components/AddKeyboard";
 import CustomKeyboardContext from "../src/CustomKeyboardContext";
 import ProfileTab from "../src/components/ProfileTab";
 import CustomPictogramKeyboard from "../src/components/CustomPictogramKeyboard";
+import Settings from "../src/components/Settings";
 import "react-native-gesture-handler";
-
 
 const Drawer = createDrawerNavigator();
 
 export default function Home() {
+  const { t } = useTranslation();
   const [showAlphabetKeyboard, setShowAlphabetKeyboard] = useState(true);
   const [showIconKeyboard, setShowIconKeyboard] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -66,7 +69,6 @@ export default function Home() {
     storeCustomKeyboards(customKeyboards);
   }, [customKeyboards]);
 
-  
   /* const for the speech-device implementation */
   const speak = (text) => {
     Speech.speak(text);
@@ -303,19 +305,19 @@ export default function Home() {
                   onPress={() => handleKeyboardChange("alphabet")}
                   style={styles.bottomBarButton}
                 >
-                  <Text>Alphabet</Text>
+                  <Text>{t("alphabet")}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => handleKeyboardChange("icon")}
                   style={styles.bottomBarButton}
                 >
-                  <Text>Icon</Text>
+                  <Text>{t("icon")}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => handleKeyboardChange("pictogram")}
                   style={styles.bottomBarButton}
                 >
-                  <Text>Pictogram</Text>
+                  <Text>{t("pictogram")}</Text>
                 </TouchableOpacity>
                 {customKeyboards.map((customKeyboard, index) => (
                   <TouchableOpacity
@@ -336,11 +338,14 @@ export default function Home() {
           component={ProfileTab}
           options={{ title: "Profile" }}
         />
-        <Drawer.Screen
-          name="Settings"
-          component={SettingsScreen}
-          options={{ title: "Settings" }}
-        />
+        <Drawer.Screen name="Settings" options={{ title: "Settings" }}>
+          {(props) => (
+            <Settings
+              {...props}
+              changeLanguage={(language) => changeLanguage(language)}
+            />
+          )}
+        </Drawer.Screen>
         <Drawer.Screen name="AddKeyboard" options={{ title: "Add keyboard" }}>
           {(props) => (
             <AddKeyboard
@@ -437,7 +442,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     fontSize: 18,
-    
   },
   navigationBarButtons: {
     marginLeft: 10,
