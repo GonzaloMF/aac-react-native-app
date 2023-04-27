@@ -21,7 +21,7 @@ import {
 import {
   storeCustomKeyboards,
   loadCustomKeyboards,
-} from "../src/CustomKeyboardContext";
+} from "../src/utils/CustomKeyboardContext";
 import { useTranslation } from "react-i18next";
 
 import { Asset } from "expo-asset";
@@ -32,7 +32,7 @@ import IconKeyboard from "../src/components/IconKeyboard";
 import SelectedItems from "../src/components/SelectedItems";
 import PictogramKeyboard from "../src/components/PictogramKeyboard";
 import AddKeyboard from "../src/components/AddKeyboard";
-import CustomKeyboardContext from "../src/CustomKeyboardContext";
+import CustomKeyboardContext from "../src/utils/CustomKeyboardContext";
 import ProfileTab from "../src/components/Profile";
 import CustomPictogramKeyboard from "../src/components/CustomPictogramKeyboard";
 import Settings from "../src/components/Settings";

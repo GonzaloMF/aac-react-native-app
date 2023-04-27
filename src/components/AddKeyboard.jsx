@@ -11,7 +11,7 @@ import {
   Modal,
 } from "react-native";
 import * as FileSystem from "expo-file-system";
-import CustomKeyboardContext from "../CustomKeyboardContext";
+import CustomKeyboardContext from "../utils/CustomKeyboardContext";
 import { useFocusEffect } from "@react-navigation/native";
 
 const AddKeyboard = ({ handleSave, ...props }) => {

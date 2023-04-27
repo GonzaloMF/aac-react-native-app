@@ -1,9 +1,8 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, View } from "react-native";
 import LoginScreen from "./screens/LoginScreen";
 import HomeScreen from "./screens/HomeScreen";
-import { CustomKeyboardProvider } from "./src/CustomKeyboardContext";
+import { CustomKeyboardProvider } from "./src/utils/CustomKeyboardContext";
 import { auth } from "./src/utils/Firebase";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
