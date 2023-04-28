@@ -1,11 +1,21 @@
 import React, { useState } from 'react';
-import {KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View,} from 'react-native';
+import {
+  KeyboardAvoidingView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { auth } from '../src/utils/Firebase';
 
+// Define the LoginScreen component
 const LoginScreen = ({ onLoginSuccess }) => {
+  // Initialize the state for email and password input fields
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  // Handle user registration
   const handleSignUp = () => {
     auth
       .createUserWithEmailAndPassword(email, password)
@@ -16,26 +26,31 @@ const LoginScreen = ({ onLoginSuccess }) => {
       .catch((error) => alert(error.message));
   };
 
+  // Handle user login
   const handleLogin = () => {
     auth
       .signInWithEmailAndPassword(email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
-        //console.log('Logged in with:', user.email);
+        // Call the onLoginSuccess function passed as a prop
         onLoginSuccess();
       })
       .catch((error) => alert(error.message));
   };
 
+  // Render the component
   return (
+    // Use KeyboardAvoidingView to prevent the keyboard from blocking input fields
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       <View style={styles.inputContainer}>
+        {/* Email input field */}
         <TextInput
           placeholder="Email"
           value={email}
           onChangeText={(text) => setEmail(text)}
           style={styles.input}
         />
+        {/* Password input field */}
         <TextInput
           placeholder="Password"
           value={password}
@@ -45,10 +60,13 @@ const LoginScreen = ({ onLoginSuccess }) => {
         />
       </View>
 
+      {/* Button container */}
       <View style={styles.buttonContainer}>
+        {/* Login button */}
         <TouchableOpacity onPress={handleLogin} style={styles.button}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
+        {/* Register button */}
         <TouchableOpacity
           onPress={handleSignUp}
           style={[styles.button, styles.buttonOutline]}>
@@ -59,6 +77,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
   );
 };
 
+// Define the styles for the component
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -106,4 +125,5 @@ const styles = StyleSheet.create({
   },
 });
 
+// Export the LoginScreen component
 export default LoginScreen;

@@ -1,3 +1,10 @@
+/*
+ * Author: Gonzalo M. Flores (2026765)
+ * Project: Develop
+ * Description: This project was developed entirely by Gonzalo M. Flores
+ *              as the final project for Swansea University (2023).
+ */
+
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import LoginScreen from "./screens/LoginScreen";

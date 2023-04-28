@@ -1,3 +1,4 @@
+// Importing necessary modules and libraries
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -14,6 +15,8 @@ import { TextInput } from "react-native-gesture-handler";
 import { useTranslation } from "react-i18next";
 import * as ImagePicker from "expo-image-picker";
 
+import localPictograms from "../utils/Pictograms"; // Importing local pictograms
+
 const CustomPictogramKeyboard = (props) => {
   const { t } = useTranslation();
 
@@ -28,6 +31,7 @@ const CustomPictogramKeyboard = (props) => {
   const [pictograms, setPictograms] = useState([]);
   const [backgroundImage, setBackgroundImage] = useState("");
 
+  // Destructuring the props to obtain methods and states from parent component
   const {
     handlePress,
     handleAddPictogram,
@@ -37,19 +41,7 @@ const CustomPictogramKeyboard = (props) => {
     selectedCustomKeyboard,
   } = props;
 
-  const [localPictograms] = useState([
-    {
-      name: "meat",
-      image: require("../images/food/meat.png"),
-      type: "pictogram",
-    },
-    {
-      name: "honey",
-      image: require("../images/food/honey.png"),
-      type: "pictogram",
-    },
-  ]);
-
+  // useEffect to update the component when selectedCustomKeyboard is changed
   useEffect(() => {
     if (selectedCustomKeyboard) {
       setTitle(selectedCustomKeyboard.title);
@@ -62,7 +54,7 @@ const CustomPictogramKeyboard = (props) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [1, 1], //change the aspect to square when you get the image (select a image and you have to crop),
+      aspect: [1, 1], // Change the aspect ratio to a square
       quality: 1,
     });
 
@@ -71,6 +63,7 @@ const CustomPictogramKeyboard = (props) => {
     }
   };
 
+  // Function to add a custom pictogram to the keyboard
   const handleAddCustomPictogram = (uri) => {
     if (!customPictogramName) {
       Alert.alert("Error", "Please enter a name for the custom pictogram");
@@ -85,16 +78,17 @@ const CustomPictogramKeyboard = (props) => {
 
     handleAddPictogram(newPictogram);
     setCustomPictogramName("");
-    setSelectedImage(null); // Clean pre-viwed image
+    setSelectedImage(null); // Clear previweded image
   };
 
+  // Function to close the custom pictogram modal
   const closeModal = () => {
     setShowCustomPictogramModal(false);
     setSelectedImage(null);
   };
 
   /* *************************************************** */
-
+  /* Function to handle the removal of a pictogram from the custom keyboard */
   const handleRemovePictogramFromCustomKeyboard = (
     pictogramToRemove,
     handleRemovePictogram
@@ -115,7 +109,9 @@ const CustomPictogramKeyboard = (props) => {
       { cancelable: true }
     );
   };
+  /* *************************************************** */
 
+  // The main view container that holds all the components and elements of the custom pictogram keyboard
   return (
     <View style={styles.container}>
       <Image
@@ -123,6 +119,9 @@ const CustomPictogramKeyboard = (props) => {
         style={styles.backgroundImage}
         resizeMode="contain"
       />
+      {/*
+        Title of the custom keyboard
+      */}
       <Text style={styles.title}>{title.toUpperCase()}</Text>
       <View style={styles.titleContainer}>
         <TouchableOpacity
@@ -136,7 +135,9 @@ const CustomPictogramKeyboard = (props) => {
             </Text>
           </View>
         </TouchableOpacity>
-
+        {/*
+          Button to show the custom pictogram modal
+        */}
         <TouchableOpacity
           style={styles.addPictogramButton}
           onPress={() => setShowCustomPictogramModal(true)}
@@ -147,6 +148,9 @@ const CustomPictogramKeyboard = (props) => {
           </View>
         </TouchableOpacity>
       </View>
+      {/*
+        Container to display the pictograms added to the custom keyboard
+      */}
       <View style={styles.keyboard}>
         {pictograms.map((pictogram) => (
           <TouchableOpacity
@@ -164,7 +168,9 @@ const CustomPictogramKeyboard = (props) => {
           </TouchableOpacity>
         ))}
       </View>
-
+      {/*
+        The following code renders modals for selecting local pictograms and importing custom pictograms
+      */}
       {showLocalPictograms && (
         <Modal
           animationType="slide"

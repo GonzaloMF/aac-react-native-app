@@ -1,17 +1,21 @@
+/*
+ * Author: Gonzalo M. Flores (2026765)
+ * Project: Develop
+ * Description: This project was developed entirely by Gonzalo M. Flores
+ *              as the final project for Swansea University (2023).
+ */
+
+// Importing necessary modules and libraries
 import React, { useState, useContext, useEffect } from "react";
 import {
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  useWindowDimensions,
-  PixelRatio,
-  Platform,
   Alert,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
 import {
@@ -24,9 +28,9 @@ import {
 } from "../src/utils/CustomKeyboardContext";
 import { useTranslation } from "react-i18next";
 
-import { Asset } from "expo-asset";
 import * as Speech from "expo-speech";
 
+// Import custom components
 import AlphabetKeyboard from "../src/components/AlphabetKeyboard";
 import IconKeyboard from "../src/components/IconKeyboard";
 import SelectedItems from "../src/components/SelectedItems";
@@ -54,7 +58,6 @@ export default function Home() {
   const { customKeyboards, setCustomKeyboards } = useContext(
     CustomKeyboardContext
   );
-  // Cargar teclados personalizados al iniciar la aplicación
   useEffect(() => {
     const loadKeyboards = async () => {
       const loadedKeyboards = await loadCustomKeyboards();
@@ -70,10 +73,12 @@ export default function Home() {
   }, [customKeyboards]);
 
   /* const for the Speed Device Generator (SDG) implementatio.
-  * Bilingual SDG option implemented  
-  */
+   * Bilingual SDG option implemented
+   */
   const speak = (text) => {
-    const voiceOptions = { language: i18n.language === 'en' ? 'en-US' : 'es-ES' };
+    const voiceOptions = {
+      language: i18n.language === "en" ? "en-US" : "es-ES",
+    };
     Speech.speak(text, voiceOptions);
   };
 
@@ -115,35 +120,31 @@ export default function Home() {
 
   /* function to delete the new keyboard added by the user */
   const handleDeleteCustomKeyboard = (index) => {
-    Alert.alert(
-      t("deleteKeyboardTitle"),
-      t("deleteKeyboardMessage"),
-      [
-        {
-          text: t("cancel"),
-          style: "cancel",
-        },
-        {
-          text: t("delete"),
-          style: "destructive",
-          onPress: () => {
-            const newCustomKeyboards = [...customKeyboards];
-            newCustomKeyboards.splice(index, 1);
-            setCustomKeyboards(newCustomKeyboards);
+    Alert.alert(t("deleteKeyboardTitle"), t("deleteKeyboardMessage"), [
+      {
+        text: t("cancel"),
+        style: "cancel",
+      },
+      {
+        text: t("delete"),
+        style: "destructive",
+        onPress: () => {
+          const newCustomKeyboards = [...customKeyboards];
+          newCustomKeyboards.splice(index, 1);
+          setCustomKeyboards(newCustomKeyboards);
 
-            // Select the previuos keyboard when is removed
-            if (index > 0) {
-              handleKeyboardChange(`custom-${index - 1}`);
-            } else if (newCustomKeyboards.length > 0) {
-              handleKeyboardChange(`custom-0`);
-            } else {
-              // If there is not a new keyboard to preview, go to the main keyboard
-              handleKeyboardChange("alphabet");
-            }
-          },
+          // Select the previuos keyboard when is removed
+          if (index > 0) {
+            handleKeyboardChange(`custom-${index - 1}`);
+          } else if (newCustomKeyboards.length > 0) {
+            handleKeyboardChange(`custom-0`);
+          } else {
+            // If there is not a new keyboard to preview, go to the main keyboard
+            handleKeyboardChange("alphabet");
+          }
         },
-      ]
-    );
+      },
+    ]);
   };
   /* ********************************************* */
 
@@ -153,9 +154,7 @@ export default function Home() {
     if (
       selectedCustomKeyboard.pictograms.find((p) => p.name === pictogram.name)
     ) {
-      Alert.alert(
-        t("pictogramAlreadyAdded_T"),
-        t("pictogramAlreadyAdded"));
+      Alert.alert(t("pictogramAlreadyAdded_T"), t("pictogramAlreadyAdded"));
       return;
     }
     const updatedCustomKeyboard = {
@@ -339,15 +338,12 @@ export default function Home() {
             </View>
           )}
         </Drawer.Screen>
-        
+
         <Drawer.Screen name="AddKeyboard" options={{ title: t("addKeyboard") }}>
           {(props) => (
             <AddKeyboard
               {...props} // pass all received properties to the AddKeyboard component
-              handleSave={(
-                keyboardTitle,
-                selectedPictograms
-              ) => {
+              handleSave={(keyboardTitle, selectedPictograms) => {
                 // Logic to save the new keyboard with its title, selected glyphs and the selected image
                 setCustomKeyboards([
                   ...customKeyboards,

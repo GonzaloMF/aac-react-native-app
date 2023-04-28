@@ -13,6 +13,7 @@ import {
 import * as FileSystem from "expo-file-system";
 import CustomKeyboardContext from "../utils/CustomKeyboardContext";
 import { useFocusEffect } from "@react-navigation/native";
+import availablePictograms from "../utils/Pictograms";
 
 const AddKeyboard = ({ handleSave, ...props }) => {
   const [keyboardTitle, setKeyboardTitle] = useState("");
@@ -20,52 +21,20 @@ const AddKeyboard = ({ handleSave, ...props }) => {
   const [selectedPictograms, setSelectedPictograms] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [symbols, setSymbols] = useState([]);
-  const [showSymbols, setShowSymbols] = useState(false);
   const { customKeyboards } = useContext(CustomKeyboardContext);
   // Agrega un estado para controlar la visibilidad del modal
   const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const availablePictograms = [
-    {
-      name: "chicken",
-      image: require("../images/food/chicken.png"),
-      type: "pictogram",
-    },
-    {
-      name: "fish",
-      image: require("../images/food/fish.png"),
-      type: "pictogram",
-    },
-    {
-      name: "honey",
-      image: require("../images/food/honey.png"),
-      type: "pictogram",
-    },
-    {
-      name: "cheese",
-      image: require("../images/food/queso.png"),
-      type: "pictogram",
-    },
-    {
-      name: "fishSoup",
-      image: require("../images/food/fishsoup.png"),
-      type: "pictogram",
-    },
-    {
-      name: "pasta",
-      image: require("../images/food/macarrones.png"),
-      type: "pictogram",
-    },
-  ];
 
   const loadPictograms = () => {
     setPictograms(availablePictograms);
   };
 
+  // Toggle the visibility of the symbols modal
   const toggleSymbolsVisibility = () => {
     setIsModalVisible(!isModalVisible);
   };
 
+  // Load the symbols from the file system
   const loadSymbols = async () => {
     const symbolDirectory = `${FileSystem.documentDirectory}images`;
     const { assets } = await FileSystem.readDirectoryAsync(symbolDirectory);
@@ -76,9 +45,11 @@ const AddKeyboard = ({ handleSave, ...props }) => {
     setSymbols(loadedSymbols);
   };
 
+  // Load symbols when the component is mounted
   useEffect(() => {
-    loadPictograms();
-  }, [symbols]);
+    //loadPictograms();
+    loadSymbols();
+  }, []);
 
   // with this useFocusEffect, the new keyboard tab will be clean when the user add one new.
   useFocusEffect(
@@ -107,10 +78,12 @@ const AddKeyboard = ({ handleSave, ...props }) => {
     setSelectedPictograms(newSelectedPictograms);
   };
 
+  // Handle changes to the keyboard title
   const handleTitleChange = (text) => {
     setKeyboardTitle(text);
   };
 
+  // Save the new keyboard and navigate back to the Home screen
   const handleSavePress = () => {
     if (
       !keyboardTitle ||
@@ -127,6 +100,7 @@ const AddKeyboard = ({ handleSave, ...props }) => {
     props.navigation.navigate("Home");
   };
 
+  // Render the component
   return (
     <View style={styles.container}>
       <Text style={styles.title}>ADD KEYBOARD</Text>
@@ -144,6 +118,7 @@ const AddKeyboard = ({ handleSave, ...props }) => {
         <Text style={styles.symbolsButtonText}>Show local pictograms</Text>
       </TouchableOpacity>
 
+      {/* Modal to display available pictograms */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -158,6 +133,8 @@ const AddKeyboard = ({ handleSave, ...props }) => {
             >
               <Text style={styles.closeButtonText}>×</Text>
             </TouchableOpacity>
+
+            {/* FlatList to display available pictograms */}
             <FlatList
               data={availablePictograms}
               renderItem={({ item }) => (
@@ -188,6 +165,7 @@ const AddKeyboard = ({ handleSave, ...props }) => {
           ))}
         </View>
       </View>
+      {/* Button to save the new keyboard */}
       <TouchableOpacity style={styles.saveButton} onPress={handleSavePress}>
         <Text style={styles.saveButtonText}>Save</Text>
       </TouchableOpacity>
