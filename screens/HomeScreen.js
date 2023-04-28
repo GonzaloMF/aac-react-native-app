@@ -33,7 +33,7 @@ import SelectedItems from "../src/components/SelectedItems";
 import PictogramKeyboard from "../src/components/PictogramKeyboard";
 import AddKeyboard from "../src/components/AddKeyboard";
 import CustomKeyboardContext from "../src/utils/CustomKeyboardContext";
-import ProfileTab from "../src/components/Profile";
+import Profile from "../src/components/Profile";
 import CustomPictogramKeyboard from "../src/components/CustomPictogramKeyboard";
 import Settings from "../src/components/Settings";
 import "react-native-gesture-handler";
@@ -241,7 +241,7 @@ export default function Home() {
   return (
     <NavigationContainer independent={true}>
       <Drawer.Navigator initialRouteName="Home">
-        <Drawer.Screen name="Home" options={{ title: "AACBoard" }}>
+        <Drawer.Screen name="Home" options={{ title: "Keyword For You" }}>
           {() => (
             <View style={styles.container}>
               <View style={styles.selectedItemsContainer}>
@@ -363,7 +363,7 @@ export default function Home() {
         </Drawer.Screen>
         <Drawer.Screen
           name="Profile"
-          component={ProfileTab}
+          component={Profile}
           options={{ title: t("profile") }}
         />
         <Drawer.Screen name="Settings" options={{ title: t("settings") }}>

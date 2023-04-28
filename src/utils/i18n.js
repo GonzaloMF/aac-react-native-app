@@ -31,6 +31,11 @@ const resources = {
       fishSoup: "Fish soup",
       cheese: "Cheese",
       fish: "Fish",
+      yes: "Yes",
+      after: "After",
+      ilike: "Like",
+      no: "No",
+      now: "Now",
       //Alerts
       deleteKeyboardTitle: "DELETE NEW KEYBOARD",
       deleteKeyboardMessage: "Are you sure that you like to DELETE this keyboard?",
@@ -70,6 +75,11 @@ const resources = {
       fishSoup: "Sopa de pescado",
       cheese: "Queso",
       fish: "Pescado",
+      yes: "Sí",
+      after: "Después",
+      ilike: "Me gusta",
+      no: "No",
+      now: "Ahora",
       //Alerts
       deleteKeyboardTitle: "ELIMINAR TECLADO NUEVO",
       deleteKeyboardMessage: "¿Estás seguro de que deseas ELIMINAR este teclado?",

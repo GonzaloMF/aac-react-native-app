@@ -31,17 +31,13 @@ export default function App() {
       <NavigationContainer ACindependent={true}>
         <View style={styles.container}>
           <Stack.Navigator>
-             {user ? (
+          <Stack.Screen options={{headerShown: false}} name="Home" component={HomeScreen} />
+          {/* Login implementation */}
+             {/*user ? (
             <Stack.Screen options={{headerShown: false}} name="Home" component={HomeScreen} />
           ) : (
             <Stack.Screen options={{headerShown: false}} name="Login" component={LoginScreen} />
-          )}
-           {/** 
-            * <Stack.Screen
-              options={{ headerShown: false }}
-              name="Home"
-              component={HomeScreen}
-            />*/} 
+          )*/}
           </Stack.Navigator>
         </View>
       </NavigationContainer>

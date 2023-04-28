@@ -17,7 +17,7 @@ const pictograms = [
   },
   {
     name: "drink",
-    image: require("../images/actions/beber.png"),
+    image: require("../images/actions/drink.png"),
     type: "pictogram",
   },
   {
@@ -43,6 +43,31 @@ const pictograms = [
   {
     name: "musicClass",
     image: require("../images/school/music.png"),
+    type: "pictogram",
+  },
+  {
+    name: "yes",
+    image: require("../images/actions/yes.png"),
+    type: "pictogram",
+  },
+  {
+    name: "after",
+    image: require("../images/actions/after.png"),
+    type: "pictogram",
+  },
+  {
+    name: "ilike",
+    image: require("../images/actions/ilike.png"),
+    type: "pictogram",
+  },
+  {
+    name: "no",
+    image: require("../images/actions/no.png"),
+    type: "pictogram",
+  },
+  {
+    name: "now",
+    image: require("../images/actions/now.png"),
     type: "pictogram",
   },
 ];
