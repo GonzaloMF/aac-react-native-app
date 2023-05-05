@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/core";
-import { auth } from "../utils/Firebase";
+// import { auth } from "../utils/Firebase";  // Uncomment if you use Firebase
 
 const Profile = () => {
   const navigation = useNavigation();
   const [userData, setUserData] = useState(auth.currentUser);
 
-  const handleSignOut = () => {
+// Uncomment if you use Firebase
+ /* const handleSignOut = () => {
     auth
       .signOut()
       .then(() => {
@@ -15,6 +16,7 @@ const Profile = () => {
       })
       .catch((error) => alert(error.message));
   };
+  */
 
   return (
     <View style={styles.container}>

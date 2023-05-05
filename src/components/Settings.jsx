@@ -58,7 +58,7 @@ const Settings = () => {
           onPress={() => changeLanguage('es')}
           style={styles.languageButton}
         >
-          <Text style={styles.buttonText}>Español</Text>
+          <Text style={styles.buttonText}>Spanish</Text>
         </TouchableOpacity>
       </View>
     </View>

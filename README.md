@@ -28,7 +28,7 @@ These instructions will help you set up the project and run it on your local mac
 
 3. Install the required dependencies: npm install
 
-4. (OPTIONAL) Create a 'Firebase.js' file in the 'src' folder and add your Firebase configuration. 
+4. (OPTIONAL) Create a 'Firebase.js' file in the 'src/utils' folder and add your Firebase configuration, uncomment the Firebase lines on App.js, LoginScreen.js and Profile.jsx. 
 Note that this file should not be pushed to the repository and should be added to the '.gitignore'.
 
 ```javascript
@@ -49,12 +49,4 @@ export default firebase;
 ```
 
 ## Running the App
-To run the app in development mode, execute the following command: expo start or npm start 
-
-
-
-
-
-
-
-
+To run the app in development mode, execute the following command: expo start or npm start

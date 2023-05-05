@@ -10,7 +10,7 @@ import { StyleSheet, View } from "react-native";
 import LoginScreen from "./screens/LoginScreen";
 import HomeScreen from "./screens/HomeScreen";
 import { CustomKeyboardProvider } from "./src/utils/CustomKeyboardContext";
-import { auth } from "./src/utils/Firebase";
+// import { auth } from "./src/utils/Firebase"; // Uncomment if you use Firebase
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -19,6 +19,9 @@ import './src/utils/i18n';
 const Stack = createStackNavigator();
 
 export default function App() {
+
+  // Uncomment if you use Firebase
+  /*
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -32,7 +35,7 @@ export default function App() {
 
     return unsubscribe;
   }, []);
-
+  */ 
   return (
     <CustomKeyboardProvider>
       <NavigationContainer ACindependent={true}>

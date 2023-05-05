@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { auth } from '../src/utils/Firebase';
+// import { auth } from '../src/utils/Firebase';
 
 // Define the LoginScreen component
 const LoginScreen = ({ onLoginSuccess }) => {
