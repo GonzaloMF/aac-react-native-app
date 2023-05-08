@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/core";
 
 const Profile = () => {
   const navigation = useNavigation();
-  const [userData, setUserData] = useState(auth.currentUser);
+//  const [userData, setUserData] = useState(auth.currentUser); // 
 
 // Uncomment if you use Firebase
  /* const handleSignOut = () => {
@@ -20,17 +20,14 @@ const Profile = () => {
 
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.profileImage}
-        source={{ uri: userData.photoURL }}
-      />
-      <Text style={styles.usernameText}>{userData.displayName}</Text>
-      <Text style={styles.emailText}>{userData.email}</Text>
+
+      {/*<Text style={styles.usernameText}>{userData.displayName}</Text>*/}
+      {/*<Text style={styles.emailText}>{userData.email}</Text>*/}
       <Text style={styles.bioText}>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam
         bibendum eleifend felis, sed imperdiet metus ultricies id. 
       </Text>
-      <TouchableOpacity onPress={handleSignOut} style={styles.button}>
+      <TouchableOpacity style={styles.button}> {/* if you use Firebase, you have to add inside the TouchableOpacity onPress={handleSignOut} */} 
         <Text style={styles.buttonText}>Sign out</Text>
       </TouchableOpacity>
     </View>
