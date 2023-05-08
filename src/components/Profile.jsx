@@ -20,7 +20,7 @@ const Profile = () => {
 
   return (
     <View style={styles.container}>
-
+      {/* Uncomment the following lines if you are using Firebase*/}
       {/*<Text style={styles.usernameText}>{userData.displayName}</Text>*/}
       {/*<Text style={styles.emailText}>{userData.email}</Text>*/}
       <Text style={styles.bioText}>
