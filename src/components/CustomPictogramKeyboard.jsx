@@ -94,15 +94,14 @@ const CustomPictogramKeyboard = (props) => {
     handleRemovePictogram
   ) => {
     Alert.alert(
-      "Remove Pictogram",
-      "Are you sure you want to DELETE this pictogram from the keyboard?",
+      t("deletePictogramTitle"),t("deletePictohramMessage"),
       [
         {
-          text: "Cancel",
+          text: t("cancel"),
           style: "cancel",
         },
         {
-          text: "Yes, Remove",
+          text: t("delete"),
           onPress: () => handleRemovePictogram(pictogramToRemove),
         },
       ],
@@ -131,7 +130,7 @@ const CustomPictogramKeyboard = (props) => {
           <View style={styles.iconWithText}>
             <Ionicons name="add-circle" size={25} color="white" />
             <Text style={styles.addPictogramButtonText}>
-              ADD LOCAL PICTOGRAMS
+            {t("importLocalPictogram")}
             </Text>
           </View>
         </TouchableOpacity>
@@ -144,7 +143,7 @@ const CustomPictogramKeyboard = (props) => {
         >
           <View style={styles.iconWithText}>
             <Ionicons name="add-circle" size={25} color="white" />
-            <Text style={styles.addPictogramButtonText}>IMPORT PICTOGRAM</Text>
+            <Text style={styles.addPictogramButtonText}>{t("importPictogram")}</Text>
           </View>
         </TouchableOpacity>
       </View>

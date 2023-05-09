@@ -1,23 +1,28 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useTranslation } from "react-i18next";
 
 const IconKeyboard = ({ handlePress }) => {
   const icons = [
     "smile",
-    "smile-beam",
-    "smile-wink",
+    "meh",
     "tired",
-    "sad-tear",
     "angry",
     "thumbs-down",
     "thumbs-up",
     "check",
+    "walking",
     "hospital",
     "bed",
     "bicycle",
-    "blind",
+    "school",
     "pencil-alt",
     "phone",
     "football-ball",
@@ -26,10 +31,11 @@ const IconKeyboard = ({ handlePress }) => {
     "cat",
     "dog",
     "horse",
-    "kiwi-bird",
+    "crow",
+    "deaf",
+    "blind",
     "utensils",
     "cookie",
-    "walking",
     "water",
     "home",
     "car",
@@ -42,7 +48,10 @@ const IconKeyboard = ({ handlePress }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{t("iconKeyboard")}</Text>
-      <View style={styles.keyboard}>
+      <ScrollView
+        contentContainerStyle={styles.keyboard}
+        showsVerticalScrollIndicator={false}
+      >
         {icons.map((icon, index) => (
           <TouchableOpacity
             key={index}
@@ -52,7 +61,7 @@ const IconKeyboard = ({ handlePress }) => {
             <Icon name={icon} size={30} color="white" />
           </TouchableOpacity>
         ))}
-      </View>
+      </ScrollView>
     </View>
   );
 };
@@ -71,17 +80,17 @@ const styles = StyleSheet.create({
   keyboard: {
     flexDirection: "row",
     flexWrap: "wrap",
-    width: "80%", // Ajustar el ancho del teclado al tamaño de la pantalla
+    width: "80%",
   },
   button: {
     backgroundColor: "lightblue",
-    padding: 8, // Aumentar el padding
-    margin: 6, // Aumentar el margen
+    padding: 8,
+    margin: 6,
     borderRadius: 5,
-    justifyContent: "center", // Centrar verticalmente el ícono
+    justifyContent: "center",
     alignItems: "center",
-    minWidth: 60, // Establecer un ancho mínimo para los botones
-    minHeight: 60, // Establecer una altura mínima para los botones
+    minWidth: 60,
+    minHeight: 60,
   },
 });
 

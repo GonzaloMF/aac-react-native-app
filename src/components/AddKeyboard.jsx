@@ -13,6 +13,8 @@ import {
 import * as FileSystem from "expo-file-system";
 import CustomKeyboardContext from "../utils/CustomKeyboardContext";
 import { useFocusEffect } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
+
 import availablePictograms from "../utils/Pictograms";
 
 const AddKeyboard = ({ handleSave, ...props }) => {
@@ -22,8 +24,12 @@ const AddKeyboard = ({ handleSave, ...props }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [symbols, setSymbols] = useState([]);
   const { customKeyboards } = useContext(CustomKeyboardContext);
-  // Agrega un estado para controlar la visibilidad del modal
+  
+  // Add an state to control the modal visibility  
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  // Traduction variable
+  const { t } = useTranslation();
 
   const loadPictograms = () => {
     setPictograms(availablePictograms);
@@ -91,8 +97,8 @@ const AddKeyboard = ({ handleSave, ...props }) => {
       customKeyboards.some((kb) => kb.title === keyboardTitle)
     ) {
       Alert.alert(
-        "Error",
-        "A new keyboard with this title already exists or is empty. Please choose a different title."
+        t("error"),
+        t("newKeyboardAlert")
       );
       return;
     }
@@ -103,7 +109,7 @@ const AddKeyboard = ({ handleSave, ...props }) => {
   // Render the component
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>ADD KEYBOARD</Text>
+      <Text style={styles.title}>{t("addKeyboard")}</Text>
       <TextInput
         style={styles.input}
         onChangeText={handleTitleChange}
@@ -115,7 +121,7 @@ const AddKeyboard = ({ handleSave, ...props }) => {
         style={[styles.imagePickerButton, styles.F]}
         onPress={toggleSymbolsVisibility}
       >
-        <Text style={styles.symbolsButtonText}>Show local pictograms</Text>
+        <Text style={styles.symbolsButtonText}>{t("showLocalPictograms")}</Text>
       </TouchableOpacity>
 
       {/* Modal to display available pictograms */}
@@ -152,7 +158,7 @@ const AddKeyboard = ({ handleSave, ...props }) => {
           </View>
         </View>
       </Modal>
-      <Text style={styles.actualKeyboardContent}>Actual keyboard content:</Text>
+      <Text style={styles.actualKeyboardContent}>{t("actualKeyboardContent")}</Text>
       <View style={styles.selectedPictogramsContainer}>
         <View style={styles.selectedPictograms}>
           {selectedPictograms.map((pictogram, index) => (
@@ -167,7 +173,7 @@ const AddKeyboard = ({ handleSave, ...props }) => {
       </View>
       {/* Button to save the new keyboard */}
       <TouchableOpacity style={styles.saveButton} onPress={handleSavePress}>
-        <Text style={styles.saveButtonText}>Save</Text>
+        <Text style={styles.saveButtonText}>{t("save")}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -226,6 +232,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 5,
     marginBottom: 20,
+    marginTop: 15,
+
   },
   saveButtonText: {
     color: "#fff",

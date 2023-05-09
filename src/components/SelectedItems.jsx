@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
-//import Icon from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 

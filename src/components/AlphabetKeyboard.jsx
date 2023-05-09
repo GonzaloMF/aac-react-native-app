@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
 import { useTranslation } from "react-i18next";
 
 const AlphabetKeyboard = ({ handlePress }) => {
@@ -9,7 +9,10 @@ const AlphabetKeyboard = ({ handlePress }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{t("alphabetKeyboard")}</Text>
-      <View style={styles.keyboard}>
+      <ScrollView
+        contentContainerStyle={styles.keyboard}
+        showsVerticalScrollIndicator={false}
+      >
         {alphabet.map((letter, index) => (
           <View key={index} style={styles.gridItem}>
             <TouchableOpacity
@@ -20,10 +23,11 @@ const AlphabetKeyboard = ({ handlePress }) => {
             </TouchableOpacity>
           </View>
         ))}
-      </View>
+      </ScrollView>
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -43,7 +47,7 @@ const styles = StyleSheet.create({
   },
   gridItem: {
     width: '20%', // 5 columns
-    height: '16.66%', // 6 rows
+    aspectRatio: 2.1, // Keep the width and height equal
     justifyContent: 'center',
     alignItems: 'center',
   },

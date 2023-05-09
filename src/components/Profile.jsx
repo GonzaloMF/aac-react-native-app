@@ -5,10 +5,10 @@ import { useNavigation } from "@react-navigation/core";
 
 const Profile = () => {
   const navigation = useNavigation();
-//  const [userData, setUserData] = useState(auth.currentUser); // 
+  //  const [userData, setUserData] = useState(auth.currentUser); //
 
-// Uncomment if you use Firebase
- /* const handleSignOut = () => {
+  // Uncomment if you use Firebase
+  /* const handleSignOut = () => {
     auth
       .signOut()
       .then(() => {
@@ -20,14 +20,18 @@ const Profile = () => {
 
   return (
     <View style={styles.container}>
-      {/* Uncomment the following lines if you are using Firebase*/}
+      {/* Uncomment the following lines and delete the examples if you are using Firebase*/}
       {/*<Text style={styles.usernameText}>{userData.displayName}</Text>*/}
       {/*<Text style={styles.emailText}>{userData.email}</Text>*/}
+      <Text style={styles.usernameText}>Name example</Text>
+      <Text style={styles.emailText}>Email example</Text>
+
       <Text style={styles.bioText}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam
-        bibendum eleifend felis, sed imperdiet metus ultricies id. 
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam bibendum
+        eleifend felis, sed imperdiet metus ultricies id.
       </Text>
-      <TouchableOpacity style={styles.button}> {/* if you use Firebase, you have to add inside the TouchableOpacity onPress={handleSignOut} */} 
+      {/* if you use Firebase, you have to add inside the TouchableOpacity below onPress={handleSignOut} */}
+      <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>Sign out</Text>
       </TouchableOpacity>
     </View>
