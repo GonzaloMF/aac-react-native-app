@@ -35,8 +35,8 @@ const localPictograms = [
     type: "pictogram",
   },
   {
-    name: "honey",
-    image: require("../images/food/honey.png"),
+    name: "egg",
+    image: require("../images/food/egg-shell.png"),
     type: "pictogram",
   },
 ];

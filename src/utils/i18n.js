@@ -1,6 +1,5 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-import { getStoredLanguage } from "../components/test/i18n_test";
 
 /* Conditions for english translation */
 const resources = {
@@ -32,6 +31,8 @@ const resources = {
       school: "School",
       musicClass: "Music class",
       meat: "Meat",
+      chicken: "Chicken",
+      egg: "Egg",
       honey: "Honey",
       pasta: "Pasta",
       fishSoup: "Fish soup",
@@ -85,6 +86,8 @@ const resources = {
       school: "Escuela",
       musicClass: "Clase de música",
       meat: "Carne",
+      chicken: "Pollo",
+      egg: "Huevo",
       honey: "Miel",
       pasta: "Pasta",
       fishSoup: "Sopa de pescado",
